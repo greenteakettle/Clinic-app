@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1138623659",
+    "firebase_url": "https://clinic-8f1a4-default-rtdb.firebaseio.com",
+    "project_id": "clinic-8f1a4",
+    "storage_bucket": "clinic-8f1a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1138623659:android:7292aca9a8f38cb30d63ee",
+        "android_client_info": {
+          "package_name": "com.example.clinic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZE76fAXjv4op4dZP7JbtT-Xx1dQIwV1c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
