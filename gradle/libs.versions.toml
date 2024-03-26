@@ -1,21 +1,33 @@
 [versions]
 agp = "8.3.0"
+androidAboutPage = "1.2.4"
+circleimageview = "2.2.0"
+comAmulyakhareTextdrawable = "1.0.1"
+firebaseDatabaseVersion = "15.0.0"
 junit = "4.13.2"
+junitJunit = "4.12"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
 material = "1.11.0"
 googleServices = "4.4.1"
 firebaseDatabase = "20.3.1"
+recyclerviewfastscroller = "0.1.3"
 
 [libraries]
+android-about-page = { module = "com.github.medyo:android-about-page", version.ref = "androidAboutPage" }
+circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
+com-amulyakhare-textdrawable = { module = "com.amulyakhare:com.amulyakhare.textdrawable", version.ref = "comAmulyakhareTextdrawable" }
+firebase-database-v1500 = { module = "com.google.firebase:firebase-database", version.ref = "firebaseDatabaseVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+junit-v412 = { module = "junit:junit", version.ref = "junitJunit" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 google-services = { group = "com.google.gms", name = "google-services", version.ref = "googleServices" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+recyclerviewfastscroller = { module = "xyz.danoz:recyclerviewfastscroller", version.ref = "recyclerviewfastscroller" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
