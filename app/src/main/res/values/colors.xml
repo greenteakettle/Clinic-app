@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="splash_bg_color">#C1DFF9</color>
+
+    <color name="toolbar_bg_color">#163B88</color>
+    <color name="tab_layout_bg_color">#748CDB</color>
+    <color name="header_bg_color">#C1DFF9</color>
+
+    <color name="most_button_Used">#0F7DC2</color>
 </resources>
