@@ -11,7 +11,12 @@
 
     <color name="toolbar_bg_color">#163B88</color>
     <color name="tab_layout_bg_color">#748CDB</color>
-    <color name="header_bg_color">#C1DFF9</color>
+    <color name="header_bg_color">#408BFF</color>
+
+    <color name="colorPrimary">#3949AB</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#5C6BC0</color>
+    <color name="skyBlue">#FF17A8EC</color>
 
     <color name="most_button_Used">#0F7DC2</color>
 </resources>
