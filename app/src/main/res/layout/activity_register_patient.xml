@@ -14,15 +14,6 @@
         android:layout_margin="20dp"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Регистрация"
-            android:textStyle="bold"
-            android:textColor="#FF3700B3"
-            android:textSize="24sp"
-            android:gravity="center"/>
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/reg_name_layout"
             android:layout_width="match_parent"
@@ -32,7 +23,6 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/name"
                 android:hint="ФИО"
                 android:inputType="textPersonName"
                 android:maxLength="20" />
@@ -47,7 +37,6 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/age"
                 android:hint="Возраст"
                 android:inputType="number"
                 android:maxLength="3" />
@@ -96,7 +85,6 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/drop"
                 android:hint="Группа крови (необязательно)"
                 android:inputType="textPersonName"
                 android:maxLength="10" />
@@ -111,7 +99,6 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/telephone"
                 android:hint="Номер телефона"
                 android:inputType="number"
                 android:maxLength="10" />
@@ -126,7 +113,6 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/address"
                 android:hint="Адрес"
                 android:inputType="textPersonName"
                 android:maxLength="30" />
@@ -141,7 +127,6 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/email"
                 android:hint="Email"
                 android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -155,7 +140,6 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@mipmap/lock"
                 android:hint="Пароль"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
