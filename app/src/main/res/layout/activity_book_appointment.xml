@@ -799,7 +799,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:shadowColor="#000000"
-                        android:text="19:00"
+                        android:text="21:00"
                         android:textColor="#ffffff"
                         android:textStyle="bold" />
 
@@ -823,7 +823,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:shadowColor="#000000"
-                        android:text="19:20"
+                        android:text="21:20"
                         android:textColor="#ffffff"
                         android:textStyle="bold" />
 
@@ -846,7 +846,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:shadowColor="#000000"
-                        android:text="19:40"
+                        android:text="21:40"
                         android:textColor="#ffffff"
                         android:textStyle="bold" />
 

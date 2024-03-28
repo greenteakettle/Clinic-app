@@ -1,20 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+xmlns:tools="http://schemas.android.com/tools"
+package="com.example.clinic">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.INTERNET" />
 
-    <application
-        android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.Clinic"
-        tools:targetApi="31" />
+<application
+
+    android:allowBackup="true"
+    android:dataExtractionRules="@xml/data_extraction_rules"
+    android:fullBackupContent="@xml/backup_rules"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:supportsRtl="true"
+    android:theme="@style/Theme.Clinic"
+    tools:targetApi="31"
+    tools:ignore="AllowBackup">
+
+    <activity
+        android:name=".SplashActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+
+    <activity
+        android:name=".home.HomeActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity" />
+    <activity
+        android:name=".auth.LoginActivity"
+        android:parentActivityName=".home.HomeActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity" />
+
+    <activity
+        android:name=".auth.RegisterPatientActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity" />
+
+    <activity
+        android:name=".patient.PatientViewDoctorProfileActivity"
+        android:parentActivityName=".home.HomeActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity" />
+    <activity
+        android:name=".patient.BookAppointmentActivity"
+        android:screenOrientation="portrait"
+        android:parentActivityName=".patient.PatientViewDoctorProfileActivity"
+        tools:ignore="LockedOrientationActivity" />
+    <activity
+        android:name=".patient.PatientViewBookedAppointmentActivity"
+        android:parentActivityName=".home.HomeActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity" />
+    <activity
+        android:name=".doctor.DoctorProfileActivity"
+        android:parentActivityName=".home.HomeActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity" />
+    <activity
+        android:name=".doctor.EditDoctorProfileActivity"
+        android:parentActivityName=".doctor.DoctorProfileActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity" />
+    <activity
+        android:name=".patient.EditUserProfileActivity"
+        android:parentActivityName=".patient.EditUserProfileActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity" />
+    <activity
+        android:name=".doctor.ShowDoctorAppointmentActivity"
+        android:parentActivityName=".home.HomeActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity" />
+    <activity
+        android:name=".auth.ForgotPasswordActivity"
+        android:parentActivityName=".auth.LoginActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity" />
+    <activity
+        android:name=".feedback.FeedbackActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity" />
 
 
+    <meta-data
+        android:name="preloaded_fonts"
+        android:resource="@array/preloaded_fonts" />
+
+</application>
 
 </manifest>

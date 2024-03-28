@@ -76,7 +76,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/patient_doctorProfile_experiance"
+                    android:id="@+id/patient_doctorProfile_experience"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
