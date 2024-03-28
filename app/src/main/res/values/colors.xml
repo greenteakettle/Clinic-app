@@ -17,6 +17,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#5C6BC0</color>
     <color name="skyBlue">#FF17A8EC</color>
+    <color name="darkGreen">#009688</color>
 
     <color name="most_button_Used">#0F7DC2</color>
 </resources>

@@ -8,27 +8,27 @@
         <item
             android:id="@+id/nav_profile"
             android:icon="@mipmap/ic_home_black_24dp"
-            android:title="Profile" />
+            android:title="Профиль" />
         <item
             android:id="@+id/nav_showAppointment"
             android:icon="@mipmap/icon"
-            android:title="Show Appointment"/>
+            android:title="Просмотреть записи"/>
         <item
             android:id="@+id/nav_bookedAppointment"
             android:icon="@mipmap/icon"
-            android:title="Booked Appointment"/>
+            android:title="Мои записи"/>
         <item
             android:id="@+id/nav_edit_user_info"
             android:icon="@mipmap/edit_text"
-            android:title="Edit User Information"/>
+            android:title="Редактировать профиль"/>
         <item
             android:id="@+id/nav_login"
             android:icon="@mipmap/login"
-            android:title="Login (or Register)"/>
+            android:title="Войти (Зарегистрироваться)"/>
         <item
             android:id="@+id/nav_logout"
             android:icon="@mipmap/logout"
-            android:title="Log Out"/>
+            android:title="Выйти"/>
 
         </group>
 
