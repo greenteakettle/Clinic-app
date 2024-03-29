@@ -1,12 +1,13 @@
 package com.example.clinic.patient;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -14,8 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.aman.hospitalappointy.R;
-import com.example.aman.hospitalappointy.auth.LoginActivity;
+import com.example.clinic.R;
+import com.example.clinic.auth.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -128,7 +129,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
 
                 }
                 else{
-                    Toast.makeText(BookAppointmentActivity.this, "Please Select Time Slot", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BookAppointmentActivity.this, "Пожалуйста выберите время записи", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -201,6 +202,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch(v.getId())
@@ -672,94 +674,94 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
 
         switch (i) {
             case 1:
-                time = "08:00 AM";
+                time = "08:00";
                 break;
             case 2:
-                time = "08:20 AM";
+                time = "08:20";
                 break;
             case 3:
-                time = "08:40 AM";
+                time = "08:40";
                 break;
             case 4:
-                time = "09:00 AM";
+                time = "09:00";
                 break;
             case 5:
-                time = "09:20 AM";
+                time = "09:20";
                 break;
             case 6:
-                time = "09:40 AM";
+                time = "09:40";
                 break;
             case 7:
-                time = "10:00 AM";
+                time = "10:00";
                 break;
             case 8:
-                time = "10:20 AM";
+                time = "10:20";
                 break;
             case 9:
-                time = "10:40 AM";
+                time = "10:40";
                 break;
             case 10:
-                time = "11:00 AM";
+                time = "11:00";
                 break;
             case 11:
-                time = "11:20 AM";
+                time = "11:20";
                 break;
             case 12:
-                time = "11:40 AM";
+                time = "11:40";
                 break;
             case 13:
-                time = "02:00 PM";
+                time = "14:00";
                 break;
             case 14:
-                time = "02:20 PM";
+                time = "14:20";
                 break;
             case 15:
-                time = "02:40 PM";
+                time = "14:40";
                 break;
             case 16:
-                time = "03:00 PM";
+                time = "15:00";
                 break;
             case 17:
-                time = "03:20 PM";
+                time = "15:20";
                 break;
             case 18:
-                time = "03:40 PM";
+                time = "15:40";
                 break;
             case 19:
-                time = "04:00 PM";
+                time = "16:00";
                 break;
             case 20:
-                time = "04:20 PM";
+                time = "16:20";
                 break;
             case 21:
-                time = "04:40 PM";
+                time = "16:40";
                 break;
             case 22:
-                time = "05:00 PM";
+                time = "17:00";
                 break;
             case 23:
-                time = "05:20 PM";
+                time = "17:20";
                 break;
             case 24:
-                time = "05:40 PM";
+                time = "17:40";
                 break;
             case 25:
-                time = "06:00 PM";
+                time = "18:00";
                 break;
             case 26:
-                time = "06:20 PM";
+                time = "18:20";
                 break;
             case 27:
-                time = "06:40 PM";
+                time = "18:40";
                 break;
             case 28:
-                time = "09:00 PM";
+                time = "21:00";
                 break;
             case 29:
-                time = "09:20 PM";
+                time = "21:20";
                 break;
             case 30:
-                time = "09:40 PM";
+                time = "21:40";
                 break;
             default:
                 break;
@@ -774,7 +776,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser == null){
-            Toast.makeText(this, "You are not Logged In.....Login first for further process", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Вы не вошли в аккаунт. Войдите в аккаунт, чтобы продолжить", Toast.LENGTH_SHORT).show();
 
             Intent login_Intent = new Intent(BookAppointmentActivity.this, LoginActivity.class);
             startActivity(login_Intent);

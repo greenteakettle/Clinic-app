@@ -1,19 +1,21 @@
 package com.example.clinic.home;
 
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.aman.hospitalappointy.home.fragments.DateFragment;
-import com.example.aman.hospitalappointy.home.fragments.DoctorFragment;
-import com.example.aman.hospitalappointy.home.fragments.SpecializationFragment;
+import com.example.clinic.home.fragments.DateFragment;
+import com.example.clinic.home.fragments.DoctorFragment;
+import com.example.clinic.home.fragments.SpecializationFragment;
 
 public class SectionPagerAdapter extends FragmentPagerAdapter{
     public SectionPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
+    @NonNull
     @Override
     public Fragment getItem(int position) {
         switch (position){

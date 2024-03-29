@@ -3,14 +3,14 @@ package com.example.clinic.patient;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import com.example.aman.hospitalappointy.R;
+import com.example.clinic.R;
 
 import java.util.Calendar;
 
@@ -30,7 +30,7 @@ public class PatientViewDoctorProfileActivity extends AppCompatActivity {
         //Toolbar
         Toolbar mToolbar = (Toolbar) findViewById(R.id.patient_doctorProfile_toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Doctor Profile");
+        getSupportActionBar().setTitle("Профиль врача");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mName = (TextView) findViewById(R.id.patient_doctorProfile_name);

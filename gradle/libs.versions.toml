@@ -1,9 +1,9 @@
 [versions]
 agp = "8.3.0"
 androidAboutPage = "1.2.4"
-circleimageview = "2.2.0"
+circleimageview = "3.1.0"
 comAmulyakhareTextdrawable = "1.0.1"
-firebaseDatabaseVersion = "15.0.0"
+firebaseDatabaseVersion = "20.3.1"
 junit = "4.13.2"
 junitJunit = "4.12"
 junitVersion = "1.1.5"

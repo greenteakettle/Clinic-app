@@ -3,14 +3,14 @@ package com.example.clinic.patient;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.aman.hospitalappointy.R;
+import com.example.clinic.R;
 
 public class EditUserProfileActivity extends AppCompatActivity {
     private TextView mAge, mBloodGroup, mNumber, mAddress;
@@ -27,7 +27,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
         //Toolbar
         mToolbar = (Toolbar) findViewById(R.id.edit_user);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Edit User Information");
+        getSupportActionBar().setTitle("Редактировать информацию");
 
         mAge = (TextView) findViewById(R.id.edit_user_age);
         mBloodGroup = (TextView) findViewById(R.id.edit_user_bloodgroup);
@@ -35,10 +35,10 @@ public class EditUserProfileActivity extends AppCompatActivity {
         mAddress = (TextView) findViewById(R.id.edit_user_address);
         actionUpdate = (Button) findViewById(R.id.reg_button);
 
-//        age = getIntent().getStringExtra("Age").toString();
-//        bloodgroup = getIntent().getStringExtra("Blood Group").toString();
-//        number = getIntent().getStringExtra("Contact Number").toString();
-//        address = getIntent().getStringExtra("Address").toString();
+        age = getIntent().getStringExtra("Age").toString();
+        bloodgroup = getIntent().getStringExtra("Blood Group").toString();
+        number = getIntent().getStringExtra("Contact Number").toString();
+        address = getIntent().getStringExtra("Address").toString();
 
         actionUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +73,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
     private void updateUserProfile() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.update_alert_message);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Ок", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -90,7 +90,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        View view = getLayoutInflater().inflate(R.layout.udate_dialog, null);
+        View view = getLayoutInflater().inflate(R.layout.update_dialog, null);
 
 
         TextView textView = (TextView) view.findViewById(R.id.update_textView);
@@ -100,13 +100,13 @@ public class EditUserProfileActivity extends AppCompatActivity {
         editText.setText(text, TextView.BufferType.EDITABLE);
 
         builder.setView(view);
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Обновить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

@@ -2,19 +2,19 @@ package com.example.clinic.patient;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.aman.hospitalappointy.R;
-import com.example.aman.hospitalappointy.model.BookedAppointmentList;
+import com.example.clinic.R;
+import com.example.clinic.model.BookedAppointmentList;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,7 +44,7 @@ public class PatientViewBookedAppointmentActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.show_bookedAppointment);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Booked Appointments");
+        getSupportActionBar().setTitle("Запланированные визиты");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.show_Appointment_recyclerView);
@@ -122,8 +122,8 @@ public class PatientViewBookedAppointmentActivity extends AppCompatActivity {
     private void alertDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(PatientViewBookedAppointmentActivity.this);
-        builder.setIcon(R.drawable.question).setTitle("Cancel Appointment");
-        builder.setMessage("Are You Sure! Want to Cancel Appointment");
+        builder.setIcon(R.drawable.question).setTitle("Отменить визит");
+        builder.setMessage("Вы уверены, что хотите отменить визит?");
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -192,94 +192,94 @@ public class PatientViewBookedAppointmentActivity extends AppCompatActivity {
 
         switch (appointment_time){
 
-            case "08:00 AM":
+            case "08:00":
                 slot = "1";
                 break;
-            case "08:20 AM":
+            case "08:20":
                 slot = "2";
                 break;
-            case "08:40 AM":
+            case "08:40":
                 slot = "3";
                 break;
-            case "09:00 AM":
+            case "09:00":
                 slot = "4";
                 break;
-            case "09:20 AM":
+            case "09:20":
                 slot = "5";
                 break;
-            case "09:40 AM":
+            case "09:40":
                 slot = "6";
                 break;
-            case "10:00 AM":
+            case "10:00":
                 slot = "7";
                 break;
-            case "10:20 AM":
+            case "10:20":
                 slot = "8";
                 break;
-            case "10:40 AM":
+            case "10:40":
                 slot = "9";
                 break;
-            case "11:00 AM":
+            case "11:00":
                 slot = "10";
                 break;
-            case "11:20 AM":
+            case "11:20":
                 slot = "11";
                 break;
-            case "11:40 AM":
+            case "11:40":
                 slot = "12";
                 break;
-            case "02:00 PM":
+            case "14:00":
                 slot = "13";
                 break;
-            case "02:20 PM":
+            case "14:20":
                 slot = "14";
                 break;
-            case "02:40 PM":
+            case "14:40":
                 slot = "15";
                 break;
-            case "03:00 PM":
+            case "15:00":
                 slot = "16";
                 break;
-            case "03:20 PM":
+            case "15:20":
                 slot = "17";
                 break;
-            case "03:40 PM":
+            case "15:40":
                 slot = "18";
                 break;
-            case "04:00 PM":
+            case "16:00":
                 slot = "19";
                 break;
-            case "04:20 PM":
+            case "16:20":
                 slot = "20";
                 break;
-            case "04:40 PM":
+            case "16:40":
                 slot = "21";
                 break;
-            case "05:00 PM":
+            case "17:00":
                 slot = "22";
                 break;
-            case "05:20 PM":
+            case "17:20":
                 slot = "23";
                 break;
-            case "05:40 PM":
+            case "17:40":
                 slot = "24";
                 break;
-            case "06:00 PM":
+            case "18:00":
                 slot = "25";
                 break;
-            case "06:20 PM":
+            case "18:20":
                 slot = "26";
                 break;
-            case "06:40 PM":
+            case "18:40":
                 slot = "27";
                 break;
-            case "09:00 PM":
+            case "21:00":
                 slot = "28";
                 break;
-            case "09:20 PM":
+            case "21:20":
                 slot = "29";
                 break;
-            case "09:40 PM":
+            case "21:40":
                 slot = "30";
                 break;
 

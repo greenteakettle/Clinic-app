@@ -1,5 +1,6 @@
 package com.example.clinic.doctor;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -64,10 +65,10 @@ public class EditDoctorProfileActivity extends AppCompatActivity {
         mAddress.setText(address);
     }
 
+    @SuppressLint("NonConstantResourceId")
     public void update(View view){
 
-        switch (view.getId()){
-
+        switch (view.getId()) {
             case R.id.edit_name:
                 alertDialog(name,"Name");
                 break;
@@ -79,12 +80,15 @@ public class EditDoctorProfileActivity extends AppCompatActivity {
             case R.id.edit_education:
                 alertDialog(education,"Education");
                 break;
+
             case R.id.edit_address:
                 alertDialog(address,"Address");
                 break;
+
             case R.id.edit_age:
                 alertDialog(age,"Age");
                 break;
+
             case R.id.edit_contact:
                 alertDialog(contact,"Contact");
                 break;
@@ -96,6 +100,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity {
             default:
                 break;
         }
+
 
     }
 
