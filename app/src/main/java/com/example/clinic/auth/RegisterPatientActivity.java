@@ -93,15 +93,15 @@ public class RegisterPatientActivity extends AppCompatActivity {
             mGender = (RadioGroup) findViewById(R.id.reg_gender_radiogroup);
             int checkedId = mGender.getCheckedRadioButtonId();
 
-                if(checkedId == R.id.reg_male_radiobtn){
-                    gender = "Мужской";
-                }
-                else if(checkedId == R.id.reg_female_radiobtn){
-                    gender = "Женский";
-                }
-                else {
-                    Toast.makeText(getBaseContext(),"Выберите пол",Toast.LENGTH_LONG).show();
-                }
+            if(checkedId == R.id.reg_male_radiobtn){
+                gender = "Мужской";
+            }
+            else if(checkedId == R.id.reg_female_radiobtn){
+                gender = "Женский";
+            }
+            else {
+                Toast.makeText(getBaseContext(),"Выберите пол",Toast.LENGTH_LONG).show();
+            }
 
             if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(name) && !TextUtils.isEmpty(age) && !TextUtils.isEmpty(contactnumber) && !TextUtils.isEmpty(address)){
 
@@ -143,7 +143,6 @@ public class RegisterPatientActivity extends AppCompatActivity {
                         userDetails.put("Contact_N0",contactnumber);
                         userDetails.put("Address",address);
                         userDetails.put("Email",email);
-                        userDetails.put("Password",password);
 
                         mUserDetails.child("Patient_Details").child(uid).setValue(userDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -166,6 +165,7 @@ public class RegisterPatientActivity extends AppCompatActivity {
                 });
 
     }
+
 
     private void verifyEmail(final String email) {
 

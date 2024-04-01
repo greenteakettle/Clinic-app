@@ -35,7 +35,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar mToolbar;
@@ -167,19 +166,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 Type = (String) dataSnapshot.child("Type").getValue();
                 status = (String) dataSnapshot.child("Status").getValue();
 
-                if (Type.equals("Patient")) {
+                if ("Patient".equals(Type)) {
                     nav_BookedAppointment.setVisible(true);
 
 
                     mUserDatabase.child("Patient_Details").child(uid).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            String name = dataSnapshot.child("Name").getValue().toString();
-                            String email = dataSnapshot.child("Email").getValue().toString();
+                            String name = dataSnapshot.child("Name").getValue(String.class);
+                            String email = dataSnapshot.child("Email").getValue(String.class);
 
                             View mView = mNavigationView.getHeaderView(0);
-                            TextView userName = (TextView) mView.findViewById(R.id.header_userName);
-                            TextView userEmail = (TextView) mView.findViewById(R.id.header_userEmail);
+                            TextView userName = mView.findViewById(R.id.header_userName);
+                            TextView userEmail = mView.findViewById(R.id.header_userEmail);
 
                             userName.setText(name);
                             userEmail.setText(email);
@@ -193,7 +192,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                         }
                     });
-                } else if (Type.equals("Doctor") && status.equals("Approved")) {
+                } else if ("Doctor".equals(Type) && "Approved".equals(status)) {
                     nav_profile.setVisible(true);
                     nav_ShowAppointment.setVisible(true);
                     nav_BookedAppointment.setVisible(true);
@@ -202,12 +201,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            String name = dataSnapshot.child("Name").getValue().toString();
-                            String email = dataSnapshot.child("Email").getValue().toString();
+                            String name = dataSnapshot.child("Name").getValue(String.class);
+                            String email = dataSnapshot.child("Email").getValue(String.class);
 
                             View mView = mNavigationView.getHeaderView(0);
-                            TextView userName = (TextView) mView.findViewById(R.id.header_userName);
-                            TextView userEmail = (TextView) mView.findViewById(R.id.header_userEmail);
+                            TextView userName = mView.findViewById(R.id.header_userName);
+                            TextView userEmail = mView.findViewById(R.id.header_userEmail);
 
                             userName.setText(name);
                             userEmail.setText(email);
@@ -230,7 +229,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(HomeActivity.this, databaseError.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

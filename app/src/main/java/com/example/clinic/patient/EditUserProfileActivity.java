@@ -1,5 +1,6 @@
 package com.example.clinic.patient;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -25,20 +26,32 @@ public class EditUserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_user_profile);
 
         //Toolbar
-        mToolbar = (Toolbar) findViewById(R.id.edit_user);
+        mToolbar = findViewById(R.id.edit_user);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Редактировать информацию");
 
-        mAge = (TextView) findViewById(R.id.edit_user_age);
-        mBloodGroup = (TextView) findViewById(R.id.edit_user_bloodgroup);
-        mNumber = (TextView) findViewById(R.id.edit_user_number);
-        mAddress = (TextView) findViewById(R.id.edit_user_address);
-        actionUpdate = (Button) findViewById(R.id.reg_button);
+        mAge = findViewById(R.id.edit_user_age);
+        mBloodGroup = findViewById(R.id.edit_user_bloodgroup);
+        mNumber = findViewById(R.id.edit_user_number);
+        mAddress = findViewById(R.id.edit_user_address);
+        actionUpdate = findViewById(R.id.reg_button);
 
-        age = getIntent().getStringExtra("Age").toString();
-        bloodgroup = getIntent().getStringExtra("Blood Group").toString();
-        number = getIntent().getStringExtra("Contact Number").toString();
-        address = getIntent().getStringExtra("Address").toString();
+        age = getIntent().getStringExtra("Age");
+        bloodgroup = getIntent().getStringExtra("Blood Group");
+        number = getIntent().getStringExtra("Contact Number");
+        address = getIntent().getStringExtra("Address");
+
+        if (age == null) {
+            age = "";
+        }
+        if (bloodgroup == null) {
+            bloodgroup = "";
+        }
+        if (number == null) {
+            number = "";
+        }
+        if (address == null) {
+            address = "";
+        }
 
         actionUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +61,8 @@ public class EditUserProfileActivity extends AppCompatActivity {
         });
     }
 
+
+    @SuppressLint("NonConstantResourceId")
     public void update(View view) {
 
         switch (view.getId()) {
