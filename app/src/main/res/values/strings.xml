@@ -2,5 +2,5 @@
     <string name="app_name">Clinic</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
-    <string name="update_alert_message" translatable="false">User information was updated</string>
+    <string name="update_alert_message">Информация о пользователе обновлена</string>
 </resources>

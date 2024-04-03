@@ -1,6 +1,5 @@
 package com.example.clinic.model;
 
-
 public class BookedAppointmentList {
 
     private String Date;
@@ -8,8 +7,6 @@ public class BookedAppointmentList {
     private String Doctor_ID;
     private String PatientID;
 
-    public BookedAppointmentList() {
-    }
 
     public BookedAppointmentList(String date, String time, String doctor_ID, String patientID) {
         this.Date = date;
@@ -49,5 +46,5 @@ public class BookedAppointmentList {
     public void setPatientID(String patientID) {
         this.PatientID = patientID;
     }
-}
 
+}

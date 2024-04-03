@@ -37,6 +37,7 @@ public class RegisterPatientActivity extends AppCompatActivity {
     private TextInputLayout mEmail;
     private TextInputLayout mPassword;
     private Button mRegister;
+    private Button mDoctorRegister;
 
     //RadioGroup & RadioButton
     private RadioGroup mGender;
@@ -55,28 +56,31 @@ public class RegisterPatientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_patient);
 
-
         // Toolbar
-        mToolbar = (Toolbar) findViewById(R.id.register_toolbar);
+        mToolbar = findViewById(R.id.register_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Регистрация пациента");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mRegProgress = new ProgressDialog(this);
 
-
         //User Details
-        mName = (TextInputLayout) findViewById(R.id.reg_name_layout);
-        mAge = (TextInputLayout) findViewById(R.id.reg_age_layout);
-        mBloodGroup = (TextInputLayout) findViewById(R.id.reg_bloodgroup_layout);
-        mContactNumber = (TextInputLayout) findViewById(R.id.reg_contact_layout);
-        mAddress = (TextInputLayout) findViewById(R.id.reg_address_layout);
+        mName = findViewById(R.id.reg_name_layout);
+        mAge = findViewById(R.id.reg_age_layout);
+        mBloodGroup = findViewById(R.id.reg_bloodgroup_layout);
+        mContactNumber = findViewById(R.id.reg_contact_layout);
+        mAddress = findViewById(R.id.reg_address_layout);
 
-        mEmail = (TextInputLayout) findViewById(R.id.reg_email_layout);
-        mPassword = (TextInputLayout) findViewById(R.id.reg_password_layout);
-        mRegister = (Button) findViewById(R.id.reg_button);
+        mEmail = findViewById(R.id.reg_email_layout);
+        mPassword = findViewById(R.id.reg_password_layout);
+        mRegister = findViewById(R.id.reg_button);
+        mDoctorRegister = findViewById(R.id.doctor_register_button);
 
-
+        // Установка слушателя кликов на кнопку mDoctorRegister
+        mDoctorRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(RegisterPatientActivity.this, RegisterDoctorActivity.class);
+            startActivity(intent);
+        });
 
         mRegister.setOnClickListener(v -> {
 
@@ -90,7 +94,7 @@ public class RegisterPatientActivity extends AppCompatActivity {
             String gender = "";
 
             //RadioGroup
-            mGender = (RadioGroup) findViewById(R.id.reg_gender_radiogroup);
+            mGender = findViewById(R.id.reg_gender_radiogroup);
             int checkedId = mGender.getCheckedRadioButtonId();
 
             if(checkedId == R.id.reg_male_radiobtn){
@@ -122,6 +126,7 @@ public class RegisterPatientActivity extends AppCompatActivity {
 
         });
     }
+
 
     private void createAccount(final String name, final String age,final String gender, final String bloodgroup, final String contactnumber, final String address, final String email, final String password) {
 
@@ -169,11 +174,11 @@ public class RegisterPatientActivity extends AppCompatActivity {
 
     private void verifyEmail(final String email) {
 
-        AlertDialog.Builder mBuiler = new AlertDialog.Builder(RegisterPatientActivity.this);
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(RegisterPatientActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.verify_email, null);
 
         TextView userEmail = (TextView) mView.findViewById(R.id.verify_email);
-        final TextView sentVerication = (TextView) mView.findViewById(R.id.verify_email_sent);
+        final TextView sentVerification = (TextView) mView.findViewById(R.id.verify_email_sent);
         Button verifyEmail = (Button) mView.findViewById(R.id.verify_button);
         Button continuebutton = (Button) mView.findViewById(R.id.verify_continue);
 
@@ -183,11 +188,11 @@ public class RegisterPatientActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    sentVerication.setText("Мы отправили письмо на "+email);
+                    sentVerification.setText("Мы отправили письмо на "+email);
 
                 }
                 else {
-                    sentVerication.setText("Не получилось отправить письмо для подтверждения");
+                    sentVerification.setText("Не получилось отправить письмо для подтверждения");
                 }
             }
         }));
@@ -197,9 +202,14 @@ public class RegisterPatientActivity extends AppCompatActivity {
             startActivity(main_Intent);
         });
 
+        mDoctorRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(RegisterPatientActivity.this, RegisterDoctorActivity.class);
+            startActivity(intent);
+        });
 
-        mBuiler.setView(mView);
-        AlertDialog dialog = mBuiler.create();
+
+        mBuilder.setView(mView);
+        AlertDialog dialog = mBuilder.create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }

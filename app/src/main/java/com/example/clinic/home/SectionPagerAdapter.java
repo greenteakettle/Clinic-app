@@ -45,11 +45,11 @@ public class SectionPagerAdapter extends FragmentPagerAdapter{
     public CharSequence getPageTitle(int position) {
         switch (position){
             case 0:
-                return "SPECIALIZATION";
+                return "Специализация";
             case 1:
-                return "DOCTOR";
+                return "Врач";
             case 2:
-                return "DATE";
+                return "Дата";
 
             default:
                 return null;
