@@ -1,5 +1,6 @@
 package com.example.clinic.patient;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -35,6 +36,7 @@ public class PatientViewBookedAppointmentActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,15 +44,45 @@ public class PatientViewBookedAppointmentActivity extends AppCompatActivity {
 
         currentUID = mAuth.getCurrentUser().getUid().toString();
 
-        mToolbar = (Toolbar) findViewById(R.id.show_bookedAppointment);
+        mToolbar = findViewById(R.id.show_bookedAppointment);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Запланированные визиты");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        recyclerView = (RecyclerView) findViewById(R.id.show_Appointment_recyclerView);
+        recyclerView = findViewById(R.id.show_Appointment_recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        checkForBookedAppointments(); // Проверка наличия запланированных визитов
+    }
+
+    private void checkForBookedAppointments() {
+        Query query = mDatabase.child("Booked_Appointments").child(currentUID);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    // Отсутствуют запланированные визиты, показать сообщение пользователю
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PatientViewBookedAppointmentActivity.this);
+                    builder.setTitle("Нет запланированных визитов")
+                            .setMessage("У вас нет запланированных визитов на данный момент.")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    // Закрыть активность или выполнить другие действия по необходимости
+                                }
+                            })
+                            .setCancelable(false)
+                            .show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Обработка ошибок, если не удалось выполнить запрос
+            }
+        });
     }
 
     @Override
@@ -75,7 +107,7 @@ public class PatientViewBookedAppointmentActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    protected void onBindViewHolder(@NonNull final BookedAppointmentsVH holder, final int position, @NonNull final BookedAppointmentList model) {
+                    protected void onBindViewHolder(@NonNull final BookedAppointmentsVH holder, @SuppressLint("RecyclerView") final int position, @NonNull final BookedAppointmentList model) {
 
                         holder.mView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -122,33 +154,30 @@ public class PatientViewBookedAppointmentActivity extends AppCompatActivity {
     private void alertDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(PatientViewBookedAppointmentActivity.this);
-        builder.setIcon(R.drawable.question).setTitle("Отменить визит");
-        builder.setMessage("Вы уверены, что хотите отменить визит?");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+        builder.setTitle("Отменить визит")
+                .setMessage("Вы уверены, что хотите отменить визит?")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
 //                Toast.makeText(Patient_ShowBookedAppointmentActivity.this, Appointment_date, Toast.LENGTH_SHORT).show();
 //                Toast.makeText(Patient_ShowBookedAppointmentActivity.this, "KEY = "+BookedAPKey, Toast.LENGTH_SHORT).show();
 //                Toast.makeText(Patient_ShowBookedAppointmentActivity.this, "Slot = "+slot, Toast.LENGTH_SHORT).show();
 
-                mDatabase.child("Appointment").child(doctorID).child(Appointment_date).child(slot).removeValue();
-                mDatabase.child("Booked_Appointments").child(currentUID).child(BookedAPKey).removeValue();
-                onStart();
+                        mDatabase.child("Appointment").child(doctorID).child(Appointment_date).child(slot).removeValue();
+                        mDatabase.child("Booked_Appointments").child(currentUID).child(BookedAPKey).removeValue();
+                        onStart();
 
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false)
+                .show();
     }
 
     public class BookedAppointmentsVH extends RecyclerView.ViewHolder{
@@ -163,25 +192,25 @@ public class PatientViewBookedAppointmentActivity extends AppCompatActivity {
 
 
         public void setDoctorName(String doctorName) {
-            TextView name = (TextView) mView.findViewById(R.id.single_doctorName);
+            TextView name = mView.findViewById(R.id.single_doctorName);
             name.setText(doctorName);
         }
 
         public void setSpecialization(String specialization) {
-            TextView specializationTV = (TextView) mView.findViewById(R.id.single_doctorSpeciality);
+            TextView specializationTV = mView.findViewById(R.id.single_doctorSpeciality);
             specializationTV.setText(specialization);
         }
 
 
         public void setTime(String time) {
 
-            TextView appointmentTime = (TextView) mView.findViewById(R.id.single_time);
+            TextView appointmentTime = mView.findViewById(R.id.single_time);
             appointmentTime.setText(time);
         }
 
         public void setDate(String date) {
 
-            TextView appointmentDate = (TextView) mView.findViewById(R.id.single_date);
+            TextView appointmentDate = mView.findViewById(R.id.single_date);
             appointmentDate.setText(date);
 
         }

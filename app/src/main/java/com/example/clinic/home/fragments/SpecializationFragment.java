@@ -164,11 +164,14 @@ public class SpecializationFragment extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 final String doctorName = getDataSnapshot("Name", dataSnapshot);
+                                final String address = getDataSnapshot("Address", dataSnapshot);
+                                final String contact_NO = getDataSnapshot("Contact_N0", dataSnapshot);
                                 final String specialization = getDataSnapshot("Specialization", dataSnapshot);
                                 final String contact = getDataSnapshot("Contact", dataSnapshot);
                                 final String experience = getDataSnapshot("Experience", dataSnapshot);
                                 final String education = getDataSnapshot("Education", dataSnapshot);
                                 final String shift = getDataSnapshot("Shift", dataSnapshot);
+                                final String status = getDataSnapshot("Status", dataSnapshot);
 
                                 holder.setDoctorName(doctorName);
                                 holder.setSpecialization(specialization);
@@ -177,11 +180,14 @@ public class SpecializationFragment extends Fragment {
                                     public void onClick(View v) {
                                         Intent intent = new Intent(getContext(), PatientViewDoctorProfileActivity.class);
                                         intent.putExtra("Name", doctorName);
+                                        intent.putExtra("Address", address);
+                                        intent.putExtra("Contact_NO", contact_NO);
                                         intent.putExtra("Specialization", specialization);
                                         intent.putExtra("Contact", contact);
                                         intent.putExtra("Experience", experience);
                                         intent.putExtra("Education", education);
                                         intent.putExtra("Shift", shift);
+                                        intent.putExtra("Status", status);
                                         intent.putExtra("UserId", doctorID);
                                         startActivity(intent);
                                     }

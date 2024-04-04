@@ -7,6 +7,9 @@ public class BookedAppointmentList {
     private String Doctor_ID;
     private String PatientID;
 
+    public BookedAppointmentList() {
+        // Пустое тело конструктора
+    }
 
     public BookedAppointmentList(String date, String time, String doctor_ID, String patientID) {
         this.Date = date;

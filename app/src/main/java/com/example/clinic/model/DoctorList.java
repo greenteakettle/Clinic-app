@@ -10,21 +10,25 @@ public class DoctorList{
     private String Specialization;
     private String Contact;
     private String Shift;
+    private String Age;
+    private String Gender;
+    private String Status;
 
-
-    public DoctorList(){
-
+    public DoctorList() {
     }
 
-    public DoctorList(String name, String email, String address, String eduction, String specialization,String contact, String experience, String shift) {
+    public DoctorList(String name, String email, String address, String education, String specialization, String contact, String experience, String shift, String age, String gender, String status) {
         this.Name = name;
         this.Email = email;
         this.Address = address;
-        this.Education = eduction;
+        this.Education = education;
         this.Specialization = specialization;
         this.Contact = contact;
         this.Experience = experience;
         this.Shift = shift;
+        this.Age = age;
+        this.Gender = gender;
+        this.Status = status;
     }
 
     public String getName() {
@@ -67,7 +71,6 @@ public class DoctorList{
         this.Specialization = specialization;
     }
 
-
     public String getExperience() {
         return Experience;
     }
@@ -90,5 +93,29 @@ public class DoctorList{
 
     public void setShift(String shift) {
         this.Shift = shift;
+    }
+
+    public String getAge() {
+        return Age;
+    }
+
+    public void setAge(String age) {
+        this.Age = age;
+    }
+
+    public String getGender() {
+        return Gender;
+    }
+
+    public void setGender(String gender) {
+        this.Gender = gender;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        this.Status = status;
     }
 }
