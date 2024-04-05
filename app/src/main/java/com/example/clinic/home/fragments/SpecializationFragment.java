@@ -196,7 +196,7 @@ public class SpecializationFragment extends Fragment {
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
-                                Log.e(TAG, "onCancelled: "+ databaseError.toString());
+                                Log.e(TAG, "onCancelled: " + databaseError.toString());
                             }
 
                             private String getDataSnapshot(String child, DataSnapshot dataSnapshot) {
@@ -230,6 +230,7 @@ public class SpecializationFragment extends Fragment {
 
     public static class DoctorListViewHolder extends RecyclerView.ViewHolder {
         View mView;
+
         public DoctorListViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
@@ -264,12 +265,9 @@ public class SpecializationFragment extends Fragment {
         public void setImage(int i) {
 
             CircleImageView imageView = mView.findViewById(R.id.profile_id_single_user);
-            if (i == 1) {
-                imageView.setImageDrawable(getResources().getDrawable(R.mipmap.patient_image));
-            } else {
-                imageView.setImageDrawable(getResources().getDrawable(R.mipmap.user_image));
-            }
+            imageView.setImageDrawable(getResources().getDrawable(R.mipmap.patient_image));
 
         }
+
     }
 }

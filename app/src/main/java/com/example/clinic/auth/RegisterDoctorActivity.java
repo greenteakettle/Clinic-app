@@ -5,12 +5,14 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -20,14 +22,18 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
 public class RegisterDoctorActivity extends AppCompatActivity {
 
     private TextInputLayout mName;
+    private TextInputLayout mSpecializationInput;
     private TextInputLayout mAge;
     private TextInputLayout mEducation;
     private TextInputLayout mExperience;
@@ -47,8 +53,6 @@ public class RegisterDoctorActivity extends AppCompatActivity {
     private DatabaseReference mUserDetails = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference mSpecializationsRef = FirebaseDatabase.getInstance().getReference().child("Specialization");
 
-    private TextInputLayout mSpecializationInputLayout;
-    private TextInputEditText mSpecializationInput;
     private Toolbar mToolbar;
     private ProgressDialog mRegProgress;
 
@@ -65,9 +69,8 @@ public class RegisterDoctorActivity extends AppCompatActivity {
 
         mRegProgress = new ProgressDialog(this);
 
-        mSpecializationInputLayout = findViewById(R.id.reg_specialization_input_layout);
         mSpecializationInput = findViewById(R.id.reg_specialization_input);
-        mSpecializationInputLayout.setHint("Введите специализацию");
+        mSpecializationInput.setHint("Введите специализацию");
 
         //User Details
         mName = findViewById(R.id.reg_doctor_name);
@@ -91,7 +94,7 @@ public class RegisterDoctorActivity extends AppCompatActivity {
             String email = mEmail.getEditText().getText().toString();
             String password = mPassword.getEditText().getText().toString();
             String gender = "";
-            String specialization = mSpecializationInput.getText().toString();
+            String specialization = mSpecializationInput.getEditText().getText().toString();
 
             //RadioGroup
             mGender = findViewById(R.id.reg_doctor_gender_radiogroup);
@@ -121,22 +124,29 @@ public class RegisterDoctorActivity extends AppCompatActivity {
         });
     }
 
-    private void createAccount(final String name, final String age, final String experience, final String education, final String specialization, final String gender, final String contactnumber, final String address, final String email, final String password) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void createAccount(final String name, final String age, final String gender, final String education, final String experience, final String specialization, final String contactnumber, final String address, final String email, final String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(RegisterDoctorActivity.this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                        if (currentUser != null) { // Проверяем, не является ли currentUser null
+                        if (currentUser != null) {
                             String uid = currentUser.getUid();
-
-                            // Генерируем уникальный Doctor_ID
                             String doctorId = mUserDetails.child("Doctor_Details").push().getKey();
 
                             mUserDetails.child("User_Type").child(uid).child("Type").setValue("Doctor");
 
-                            // Сохраняем данные доктора в базу данных Firebase
                             HashMap<String, String> userDetails = new HashMap<>();
-                            userDetails.put("Doctor_ID", doctorId); // Присваиваем Doctor_ID
+                            userDetails.put("Doctor_ID", doctorId);
                             userDetails.put("Name", name);
                             userDetails.put("Age", age);
                             userDetails.put("Education", education);
@@ -146,14 +156,13 @@ public class RegisterDoctorActivity extends AppCompatActivity {
                             userDetails.put("Contact_N0", contactnumber);
                             userDetails.put("Address", address);
                             userDetails.put("Email", email);
-                            userDetails.put("Status", "0"); // Adding status with value "0"
+                            userDetails.put("Status", "0");
 
                             mUserDetails.child("Doctor_Details").child(uid).setValue(userDetails).addOnCompleteListener(task1 -> {
                                 mRegProgress.dismiss();
                                 Toast.makeText(RegisterDoctorActivity.this, "Аккаунт успешно создан", Toast.LENGTH_SHORT).show();
                                 verifyEmail(email);
 
-                                // Save specialization to the database
                                 saveSpecialization(specialization, doctorId);
                             });
                         } else {
@@ -198,16 +207,55 @@ public class RegisterDoctorActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void saveSpecialization(String specialization, String doctorId) {
-        // Используем введенное пользователем значение специализации
-        String specializationId = mSpecializationsRef.push().getKey();
-        mSpecializationsRef.child(specializationId).setValue(specialization);
+    private void saveSpecialization(final String specialization, final String doctorId) {
+        // Проверяем наличие специализации в базе данных
+        mSpecializationsRef.child(specialization).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Специализация уже существует в базе данных
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String key = snapshot.getKey();
+                        if (key != null) {
+                            // Помещаем данные доктора внутрь существующей специализации
+                            HashMap<String, Object> doctorData = new HashMap<>();
+                            doctorData.put("Doctor_ID", doctorId);
 
-        // Привязываем врача к специализации
-        mSpecializationsRef.child(specializationId).child("Doctors").child(doctorId).setValue(true);
+                            // Сохраняем данные доктора в базе данных Firebase
+                            mSpecializationsRef.child(specialization).child(key).setValue(doctorData)
+                                    .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(RegisterDoctorActivity.this, "Специализация успешно обновлена", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(RegisterDoctorActivity.this, "Ошибка при обновлении специализации", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                            return; // Выходим из цикла после добавления информации
+                        }
+                    }
+                } else {
+                    // Специализация отсутствует в базе данных, создаем новую запись
+                    HashMap<String, Object> doctorData = new HashMap<>();
+                    doctorData.put("Doctor_ID", doctorId);
+
+                    // Сохраняем данные доктора в базе данных Firebase
+                    mSpecializationsRef.child(specialization).push().setValue(doctorData)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(RegisterDoctorActivity.this, "Специализация успешно сохранена", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(RegisterDoctorActivity.this, "Ошибка при сохранении специализации", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(RegisterDoctorActivity.this, "Ошибка при проверке специализации", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-
-
 
 
 }

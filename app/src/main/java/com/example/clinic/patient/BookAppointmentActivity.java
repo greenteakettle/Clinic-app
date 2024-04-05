@@ -91,12 +91,13 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
             int resId = getResources().getIdentifier("time" + (i + 1), "id", getPackageName());
             timeSlots[i] = findViewById(resId);
             timeSlots[i].setOnClickListener(this);
+            timeSlots[i].setTag(i + 1); // Установка тега для каждого слота времени
         }
     }
 
     @Override
     public void onClick(View v) {
-        int index = Integer.parseInt(v.getTag().toString());
+        int index = (int) v.getTag(); // Получение тега, чтобы определить индекс
         checkIsBooked(index);
     }
 
@@ -134,44 +135,48 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     }
 
     private void bookAppointment() {
-        appointmentRef.child(getIntent().getStringExtra("DoctorUserId")).child(date).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (int i = 1; i <= 30; i++) {
-                    if (dataSnapshot.hasChild(String.valueOf(i))) {
-                        if (dataSnapshot.child(String.valueOf(i)).child("PatientID").getValue().toString().equals(mAuth.getCurrentUser().getUid())) {
-                            Toast.makeText(BookAppointmentActivity.this, "У вас уже есть запись", Toast.LENGTH_SHORT).show();
-                            return;
+        if (date != null) { // Проверяем, что дата не равна null
+            appointmentRef.child(getIntent().getStringExtra("Doctor_ID")).child(date).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (int i = 1; i <= 30; i++) {
+                        if (dataSnapshot.hasChild(String.valueOf(i))) {
+                            if (dataSnapshot.child(String.valueOf(i)).child("PatientID").getValue() != null && dataSnapshot.child(String.valueOf(i)).child("PatientID").getValue().toString().equals(mAuth.getCurrentUser().getUid())) {
+                                Toast.makeText(BookAppointmentActivity.this, "У вас уже есть запись", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                         }
                     }
+                    setTime(flagChecked);
+                    appointmentRef.child(getIntent().getStringExtra("Doctor_ID")).child(date).child(String.valueOf(flagChecked)).child("PatientID").setValue(mAuth.getCurrentUser().getUid());
+                    patientDatabase.child("Doctor_Details").child(getIntent().getStringExtra("Doctor_ID")).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String doctorName = dataSnapshot.child("Name").getValue().toString();
+
+                            HashMap<String, String> details = new HashMap<>();
+                            details.put("Doctor_ID", getIntent().getStringExtra("Doctor_ID"));
+                            details.put("Date", date);
+                            details.put("Time", time);
+
+                            patientDatabase.child("Booked_Appointments").child(mAuth.getCurrentUser().getUid()).push().setValue(details);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+
+                    startActivity(new Intent(BookAppointmentActivity.this, PatientViewBookedAppointmentActivity.class));
                 }
-                setTime(flagChecked);
-                appointmentRef.child(getIntent().getStringExtra("DoctorUserId")).child(date).child(String.valueOf(flagChecked)).child("PatientID").setValue(mAuth.getCurrentUser().getUid());
-                patientDatabase.child("Doctor_Details").child(getIntent().getStringExtra("DoctorUserId")).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String doctorName = dataSnapshot.child("Name").getValue().toString();
 
-                        HashMap<String, String> details = new HashMap<>();
-                        details.put("Doctor_ID", getIntent().getStringExtra("DoctorUserId"));
-                        details.put("Date", date);
-                        details.put("Time", time);
-
-                        patientDatabase.child("Booked_Appointments").child(mAuth.getCurrentUser().getUid()).push().setValue(details);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-
-                startActivity(new Intent(BookAppointmentActivity.this, PatientViewBookedAppointmentActivity.class));
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        } else {
+            Toast.makeText(this, "Дата не выбрана", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setTime(int index) {
@@ -271,6 +276,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         }
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -282,24 +288,30 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
             finish();
         } else {
             flagChecked = 0;
-            appointmentRef.child(getIntent().getStringExtra("DoctorUserId")).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (int i = 1; i <= 30; i++) {
-                        if (dataSnapshot.child(date).hasChild(String.valueOf(i))) {
-                            timeSlots[i - 1].setCardBackgroundColor(Color.RED);
-                            timeSlots[i - 1].setClickable(false);
-                        } else {
-                            timeSlots[i - 1].setCardBackgroundColor(getResources().getColor(R.color.skyBlue));
-                            timeSlots[i - 1].setClickable(true);
+            if (date != null) {
+                appointmentRef.child(getIntent().getStringExtra("Doctor_ID")).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (int i = 1; i <= 30; i++) {
+                            if (dataSnapshot.child(date).hasChild(String.valueOf(i))) {
+                                timeSlots[i - 1].setCardBackgroundColor(Color.RED);
+                                timeSlots[i - 1].setClickable(false);
+                            } else {
+                                timeSlots[i - 1].setCardBackgroundColor(getResources().getColor(R.color.skyBlue));
+                                timeSlots[i - 1].setClickable(true);
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Обработка ошибок базы данных
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Дата не выбрана", Toast.LENGTH_SHORT).show();
+            }
         }
     }
+
 }

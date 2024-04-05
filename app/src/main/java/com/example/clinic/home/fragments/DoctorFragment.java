@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.clinic.R;
@@ -84,10 +85,7 @@ public class DoctorFragment extends Fragment {
         if (mDatabase == null)
             mDatabase = FirebaseDatabase.getInstance().getReference().child("Doctor_Details");
 
-        Query query = mDatabase.orderByChild("Name");
-        if (!searchQuery.isEmpty()) {
-            query = query.startAt(searchQuery).endAt(searchQuery + "\uf8ff");
-        }
+        Query query = mDatabase.orderByChild("Status").equalTo("1");
 
         FirebaseRecyclerOptions<DoctorList> firebaseRecyclerOptions = new FirebaseRecyclerOptions.Builder<DoctorList>()
                 .setQuery(query, DoctorList.class)
@@ -97,9 +95,16 @@ public class DoctorFragment extends Fragment {
                 new FirebaseRecyclerAdapter<DoctorList, DoctorListViewHolder>(firebaseRecyclerOptions) {
                     @Override
                     protected void onBindViewHolder(@NonNull final DoctorListViewHolder holder, int position, @NonNull final DoctorList model) {
-
                         holder.setName(model.getName());
                         holder.setSpecialization(model.getSpecialization());
+
+                        // Проверяем пол врача и устанавливаем соответствующую картинку
+                        if (model.getGender().equalsIgnoreCase("Мужской")) {
+                            holder.setImage(R.mipmap.male_doctor);
+                        } else if (model.getGender().equalsIgnoreCase("Женский")) {
+                            holder.setImage(R.mipmap.female_doctor);
+                        }
+
                         final String uid = getRef(position).getKey();
                         holder.mView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -123,7 +128,6 @@ public class DoctorFragment extends Fragment {
                                 startActivity(intent);
                             }
                         });
-
                     }
 
                     @Override
@@ -135,17 +139,19 @@ public class DoctorFragment extends Fragment {
 
         mDoctorList.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
-
     }
+
 
 
     public static class DoctorListViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
+        ImageView mImageView;
 
         public DoctorListViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
+            mImageView = itemView.findViewById(R.id.profile_id_single_user); // Инициализируем ImageView
         }
 
         public void setName(String name) {
@@ -157,5 +163,11 @@ public class DoctorFragment extends Fragment {
             TextView userName = mView.findViewById(R.id.special_id_single_user);
             userName.setText(specialization);
         }
+
+        // Добавляем метод для установки изображения
+        public void setImage(int resource) {
+            mImageView.setImageResource(resource);
+        }
     }
+
 }

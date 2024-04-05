@@ -169,7 +169,7 @@ public class DateFragment extends Fragment {
                                 Intent intent = new Intent(getContext(), PatientViewDoctorProfileActivity.class);
                                 intent.putExtra("Name", name);
                                 intent.putExtra("Specialization", specialization);
-                                intent.putExtra("Contact", contact);
+                                intent.putExtra("Contact_NO", contact);
                                 intent.putExtra("Experience", experience);
                                 intent.putExtra("Education", education);
                                 intent.putExtra("Shift", shift);
@@ -191,7 +191,7 @@ public class DateFragment extends Fragment {
         firebaseRecyclerAdapter.startListening();
     }
 
-    public class DoctorListVH extends RecyclerView.ViewHolder {
+    public static class DoctorListVH extends RecyclerView.ViewHolder {
 
         View mView;
 

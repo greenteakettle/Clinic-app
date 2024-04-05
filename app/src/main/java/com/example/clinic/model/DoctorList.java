@@ -2,13 +2,14 @@ package com.example.clinic.model;
 
 public class DoctorList{
 
+    private String Doctor_ID;
     private String Name;
     private String Email;
     private String Address;
     private String Education;
     private String Experience;
     private String Specialization;
-    private String Contact;
+    private String Contact_N0;
     private String Shift;
     private String Age;
     private String Gender;
@@ -17,18 +18,27 @@ public class DoctorList{
     public DoctorList() {
     }
 
-    public DoctorList(String name, String email, String address, String education, String specialization, String contact, String experience, String shift, String age, String gender, String status) {
+    public DoctorList(String doctor_ID, String name, String email, String address, String education, String specialization, String contact_N0, String experience, String shift, String age, String gender, String status) {
+        this.Doctor_ID = doctor_ID;
         this.Name = name;
         this.Email = email;
         this.Address = address;
         this.Education = education;
         this.Specialization = specialization;
-        this.Contact = contact;
+        this.Contact_N0 = contact_N0;
         this.Experience = experience;
         this.Shift = shift;
         this.Age = age;
         this.Gender = gender;
         this.Status = status;
+    }
+
+    public String getDoctor_ID() {
+        return Doctor_ID;
+    }
+
+    public void setDoctor_ID(String doctor_ID) {
+        this.Doctor_ID = doctor_ID;
     }
 
     public String getName() {
@@ -80,11 +90,11 @@ public class DoctorList{
     }
 
     public String getContact() {
-        return Contact;
+        return Contact_N0;
     }
 
-    public void setContact(String contact) {
-        this.Contact = contact;
+    public void setContact(String contact_N0) {
+        this.Contact_N0 = contact_N0;
     }
 
     public String getShift() {

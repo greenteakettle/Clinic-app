@@ -42,7 +42,6 @@ public class RegisterPatientActivity extends AppCompatActivity {
     //RadioGroup & RadioButton
     private RadioGroup mGender;
 
-
     //Firebase Auth
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
