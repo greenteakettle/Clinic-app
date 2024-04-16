@@ -1,13 +1,12 @@
 package com.example.clinic.patient;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import android.os.Bundle;
 import androidx.cardview.widget.CardView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -28,22 +27,23 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class BookAppointmentActivity extends AppCompatActivity implements View.OnClickListener {
+public class BookAppointmentActivity extends AppCompatActivity implements View.OnClickListener{
 
     private String date, time = "", shift;
     private TextView selectDate;
     private Toolbar mToolbar;
     private Button mConfirm;
-    private int flagChecked = 0;
+    private  int flagChecked=0;
 
     private LinearLayout morningLayout, eveningLayout;
 
     private Calendar calendar;
     private DatePickerDialog datePickerDialog;
 
-    private CardView[] timeSlots = new CardView[30];
-    private DatabaseReference appointmentRef = FirebaseDatabase.getInstance().getReference().child("Appointment");
-    private DatabaseReference patientDatabase = FirebaseDatabase.getInstance().getReference();
+    private CardView[] timeSlots = new CardView[30]; // Array to hold the CardViews for time slots
+
+    private DatabaseReference mDataBaseRef = FirebaseDatabase.getInstance().getReference().child("Appointment");
+    private DatabaseReference mPatientDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
@@ -51,16 +51,17 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_appointment);
 
-        // Toolbar
+        //Toolbar
         mToolbar = findViewById(R.id.patient_bookAppointment);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Записаться на прием");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Добавляем кнопку "назад"
 
         morningLayout = findViewById(R.id.morning_shift);
         eveningLayout = findViewById(R.id.evening_shift);
         shift = getIntent().getStringExtra("Shift");
 
-        if ("Morning".equals(shift)) {
+        if (shift.equals("Утро")) {
             morningLayout.setVisibility(View.VISIBLE);
             eveningLayout.setVisibility(View.GONE);
         } else {
@@ -69,11 +70,57 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         }
 
         mConfirm = findViewById(R.id.confirm_appointment);
-        mConfirm.setOnClickListener(v -> {
-            if (flagChecked != 0) {
-                bookAppointment();
-            } else {
-                Toast.makeText(BookAppointmentActivity.this, "Пожалуйста выберите время", Toast.LENGTH_SHORT).show();
+        mConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (flagChecked != 0) {
+                    mDataBaseRef.child(getIntent().getStringExtra("DoctorUserId")).child(date).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            int i = 1;
+                            for (i = 1; i <= 30; i++) {
+                                if (dataSnapshot.hasChild(String.valueOf(i))) {
+                                    if (dataSnapshot.child(String.valueOf(i)).child("PatientID").getValue() != null &&
+                                            dataSnapshot.child(String.valueOf(i)).child("PatientID").getValue().toString().equals(mAuth.getCurrentUser().getUid())) {
+                                        Toast.makeText(BookAppointmentActivity.this, "У вас уже есть запись", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                }
+                            }
+                            if (i > 30) {
+                                setTime(flagChecked);
+                                mDataBaseRef.child(getIntent().getStringExtra("DoctorUserId")).child(date).child(String.valueOf(flagChecked)).child("PatientID").setValue(mAuth.getCurrentUser().getUid().toString());
+                                mPatientDatabase.child("Doctor_Details").child(getIntent().getStringExtra("DoctorUserId")).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        String doctorName = dataSnapshot.child("Name").getValue().toString();
+
+                                        HashMap<String,String> details = new HashMap<>();
+                                        details.put("Doctor_ID",getIntent().getStringExtra("DoctorUserId"));
+                                        details.put("Date",date);
+                                        details.put("Time",time);
+
+                                        mPatientDatabase.child("Booked_Appointments").child(mAuth.getCurrentUser().getUid()).push().setValue(details);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                                startActivity(new Intent(BookAppointmentActivity.this, PatientViewBookedAppointmentActivity.class));
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                } else {
+                    Toast.makeText(BookAppointmentActivity.this, "Пожалуйста выберите время", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -81,106 +128,71 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
 
         date = getIntent().getStringExtra("Date");
         selectDate.setText(date);
-        selectDate.setOnClickListener(v -> showDatePicker());
+        selectDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendar = Calendar.getInstance();
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
 
-        initializeTimeSlots();
-    }
+                datePickerDialog = new DatePickerDialog(BookAppointmentActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        date = dayOfMonth + "-" + (month + 1) + "-" + year;
+                        selectDate.setText(date);
+                        onStart();
+                    }
+                }, day, month, year);
+                datePickerDialog.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() + (3 * 60 * 60 * 1000));
+                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() + (15 * 24 * 60 * 60 * 1000));
+                datePickerDialog.show();
+            }
+        });
 
-    private void initializeTimeSlots() {
+        // Initialize CardViews for time slots
         for (int i = 0; i < 30; i++) {
-            int resId = getResources().getIdentifier("time" + (i + 1), "id", getPackageName());
-            timeSlots[i] = findViewById(resId);
+            int resID = getResources().getIdentifier("time" + (i + 1), "id", getPackageName());
+            timeSlots[i] = findViewById(resID);
             timeSlots[i].setOnClickListener(this);
-            timeSlots[i].setTag(i + 1); // Установка тега для каждого слота времени
         }
     }
 
     @Override
     public void onClick(View v) {
-        int index = (int) v.getTag(); // Получение тега, чтобы определить индекс
-        checkIsBooked(index);
+        for (int i = 0; i < 30; i++) {
+            if (v.getId() == timeSlots[i].getId()) {
+                checkIsBooked(i + 1); // Adjusting index to match time slots starting from 1
+                break;
+            }
+        }
     }
 
-    private void checkIsBooked(int index) {
+    private void checkIsBooked(int i) {
         if (flagChecked != 0) {
             setDefaultColor(flagChecked);
         }
-        flagChecked = index;
-        setColorGreen(index);
+        flagChecked = i;
+        setColorGreen(i);
     }
 
-    private void setDefaultColor(int index) {
-        timeSlots[index - 1].setCardBackgroundColor(getResources().getColor(R.color.skyBlue));
+    private void setDefaultColor(int i) {
+        timeSlots[i - 1].setCardBackgroundColor(getResources().getColor(R.color.skyBlue));
+        timeSlots[i - 1].setEnabled(true);
     }
 
-    private void setColorGreen(int index) {
-        timeSlots[index - 1].setCardBackgroundColor(Color.GREEN);
+    private void setColorRed(int i) {
+        timeSlots[i - 1].setCardBackgroundColor(Color.RED);
+        timeSlots[i - 1].setEnabled(false);
     }
 
-    private void showDatePicker() {
-        calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
-
-        datePickerDialog = new DatePickerDialog(BookAppointmentActivity.this, (view, year1, month1, dayOfMonth) -> {
-            date = dayOfMonth + "-" + (month1 + 1) + "-" + year1;
-            selectDate.setText(date);
-            onStart();
-        }, year, month, day);
-        datePickerDialog.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() + (3 * 60 * 60 * 1000));
-        datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() + (15 * 24 * 60 * 60 * 1000));
-        datePickerDialog.show();
+    private void setColorGreen(int i) {
+        timeSlots[i - 1].setCardBackgroundColor(Color.GREEN);
     }
 
-    private void bookAppointment() {
-        if (date != null) { // Проверяем, что дата не равна null
-            appointmentRef.child(getIntent().getStringExtra("Doctor_ID")).child(date).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (int i = 1; i <= 30; i++) {
-                        if (dataSnapshot.hasChild(String.valueOf(i))) {
-                            if (dataSnapshot.child(String.valueOf(i)).child("PatientID").getValue() != null && dataSnapshot.child(String.valueOf(i)).child("PatientID").getValue().toString().equals(mAuth.getCurrentUser().getUid())) {
-                                Toast.makeText(BookAppointmentActivity.this, "У вас уже есть запись", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                        }
-                    }
-                    setTime(flagChecked);
-                    appointmentRef.child(getIntent().getStringExtra("Doctor_ID")).child(date).child(String.valueOf(flagChecked)).child("PatientID").setValue(mAuth.getCurrentUser().getUid());
-                    patientDatabase.child("Doctor_Details").child(getIntent().getStringExtra("Doctor_ID")).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String doctorName = dataSnapshot.child("Name").getValue().toString();
-
-                            HashMap<String, String> details = new HashMap<>();
-                            details.put("Doctor_ID", getIntent().getStringExtra("Doctor_ID"));
-                            details.put("Date", date);
-                            details.put("Time", time);
-
-                            patientDatabase.child("Booked_Appointments").child(mAuth.getCurrentUser().getUid()).push().setValue(details);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                        }
-                    });
-
-                    startActivity(new Intent(BookAppointmentActivity.this, PatientViewBookedAppointmentActivity.class));
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
-        } else {
-            Toast.makeText(this, "Дата не выбрана", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void setTime(int index) {
-        switch (index) {
+    private void setTime(int i) {
+        switch (i) {
             case 1:
                 time = "08:00";
                 break;
@@ -276,42 +288,49 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         }
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
-
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Toast.makeText(this, "Вы не авторизированы. Войдите в аккаунт, чтобы продолжить", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(BookAppointmentActivity.this, LoginActivity.class));
-            finish();
+            Toast.makeText(this, "Вы не вошли в аккаунт. Войдите в аккаунт, чтобы продолжить", Toast.LENGTH_SHORT).show();
+            Intent login_Intent = new Intent(BookAppointmentActivity.this, LoginActivity.class);
+            startActivity(login_Intent);
         } else {
             flagChecked = 0;
-            if (date != null) {
-                appointmentRef.child(getIntent().getStringExtra("Doctor_ID")).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (int i = 1; i <= 30; i++) {
-                            if (dataSnapshot.child(date).hasChild(String.valueOf(i))) {
-                                timeSlots[i - 1].setCardBackgroundColor(Color.RED);
-                                timeSlots[i - 1].setClickable(false);
-                            } else {
-                                timeSlots[i - 1].setCardBackgroundColor(getResources().getColor(R.color.skyBlue));
-                                timeSlots[i - 1].setClickable(true);
+            mDataBaseRef.child(getIntent().getStringExtra("DoctorUserId")).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.hasChild(date)) {
+                        mDataBaseRef.child(getIntent().getStringExtra("DoctorUserId")).child(date).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (int i = 1; i <= 30; i++) {
+                                    if (dataSnapshot.hasChild(String.valueOf(i))) {
+                                        setColorRed(i);
+                                    } else {
+                                        setDefaultColor(i);
+                                    }
+                                }
                             }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    } else {
+                        for (int i = 1; i <= 30; i++) {
+                            setDefaultColor(i);
                         }
                     }
+                }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        // Обработка ошибок базы данных
-                    }
-                });
-            } else {
-                Toast.makeText(this, "Дата не выбрана", Toast.LENGTH_SHORT).show();
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
-
 }

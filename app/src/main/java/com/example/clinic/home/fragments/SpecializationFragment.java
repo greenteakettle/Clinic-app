@@ -1,6 +1,6 @@
 package com.example.clinic.home.fragments;
 
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.clinic.R;
 import com.example.clinic.model.BookedAppointmentList;
+import com.example.clinic.model.DoctorList;
 import com.example.clinic.patient.PatientViewDoctorProfileActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -40,9 +41,11 @@ public class SpecializationFragment extends Fragment {
     private static final String TAG = SpecializationFragment.class.getSimpleName();
     private View rootView;
 
-    private RecyclerView mRecylerView;
+    private RecyclerView mRecyclerView;
 
     private final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+    private AlertDialog mDialog;
 
     public SpecializationFragment() {
         //Required Empty public constructor otherwise app will crash
@@ -62,9 +65,9 @@ public class SpecializationFragment extends Fragment {
     }
 
     private void initView() {
-        mRecylerView = rootView.findViewById(R.id.specialization_recyclerView);
-        mRecylerView.setHasFixedSize(true);
-        mRecylerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+        mRecyclerView = rootView.findViewById(R.id.specialization_recyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
 
         EditText searchTextBox = rootView.findViewById(R.id.special_searchtxt);
         searchTextBox.addTextChangedListener(new TextWatcher() {
@@ -93,14 +96,14 @@ public class SpecializationFragment extends Fragment {
             query = query.startAt(searchQuery).endAt(searchQuery + "\uf8ff");
         }
 
-        FirebaseRecyclerOptions<BookedAppointmentList> firebaseRecyclerOptions = new FirebaseRecyclerOptions.Builder<BookedAppointmentList>()
-                .setQuery(query, BookedAppointmentList.class)
+        FirebaseRecyclerOptions<DoctorList> firebaseRecyclerOptions = new FirebaseRecyclerOptions.Builder<DoctorList>()
+                .setQuery(query, DoctorList.class)
                 .build();
 
-        FirebaseRecyclerAdapter<BookedAppointmentList, SpecializationViewHolder> firebaseRecyclerAdapter =
-                new FirebaseRecyclerAdapter<BookedAppointmentList, SpecializationViewHolder>(firebaseRecyclerOptions) {
+        FirebaseRecyclerAdapter<DoctorList, SpecializationViewHolder> firebaseRecyclerAdapter =
+                new FirebaseRecyclerAdapter<DoctorList, SpecializationViewHolder>(firebaseRecyclerOptions) {
                     @Override
-                    protected void onBindViewHolder(@NonNull final SpecializationViewHolder holder, final int position, @NonNull final BookedAppointmentList model) {
+                    protected void onBindViewHolder(@NonNull final SpecializationViewHolder holder, final int position, @NonNull final DoctorList model) {
 
                         final String Special = getRef(position).getKey();
                         holder.setSpecialization(Special);
@@ -132,7 +135,7 @@ public class SpecializationFragment extends Fragment {
                         Log.d(TAG, "Specialization RecyclerViewItem Count: " + getItemCount());
                     }
                 };
-        mRecylerView.setAdapter(firebaseRecyclerAdapter);
+        mRecyclerView.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
     }
 
@@ -147,7 +150,7 @@ public class SpecializationFragment extends Fragment {
 
         builder.setView(view);
 
-        Query query = mDatabase.child("Specialization").child(special);
+        Query query = mDatabase.child("Doctor_Details").orderByChild("Specialization").equalTo(special);
 
         FirebaseRecyclerOptions<BookedAppointmentList> firebaseRecyclerOptions = new FirebaseRecyclerOptions.Builder<BookedAppointmentList>()
                 .setQuery(query, BookedAppointmentList.class)
@@ -164,14 +167,11 @@ public class SpecializationFragment extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 final String doctorName = getDataSnapshot("Name", dataSnapshot);
-                                final String address = getDataSnapshot("Address", dataSnapshot);
-                                final String contact_NO = getDataSnapshot("Contact_N0", dataSnapshot);
-                                final String specialization = getDataSnapshot("Specialization", dataSnapshot);
-                                final String contact = getDataSnapshot("Contact", dataSnapshot);
+                                final String specialization = special; // Get specialization from method parameter
+                                final String contact = getDataSnapshot("Contact_N0", dataSnapshot);
                                 final String experience = getDataSnapshot("Experience", dataSnapshot);
                                 final String education = getDataSnapshot("Education", dataSnapshot);
                                 final String shift = getDataSnapshot("Shift", dataSnapshot);
-                                final String status = getDataSnapshot("Status", dataSnapshot);
 
                                 holder.setDoctorName(doctorName);
                                 holder.setSpecialization(specialization);
@@ -180,14 +180,11 @@ public class SpecializationFragment extends Fragment {
                                     public void onClick(View v) {
                                         Intent intent = new Intent(getContext(), PatientViewDoctorProfileActivity.class);
                                         intent.putExtra("Name", doctorName);
-                                        intent.putExtra("Address", address);
-                                        intent.putExtra("Contact_NO", contact_NO);
                                         intent.putExtra("Specialization", specialization);
-                                        intent.putExtra("Contact", contact);
+                                        intent.putExtra("Contact_N0", contact);
                                         intent.putExtra("Experience", experience);
                                         intent.putExtra("Education", education);
                                         intent.putExtra("Shift", shift);
-                                        intent.putExtra("Status", status);
                                         intent.putExtra("UserId", doctorID);
                                         startActivity(intent);
                                     }
@@ -210,7 +207,7 @@ public class SpecializationFragment extends Fragment {
 
                     @Override
                     public DoctorListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        View mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_doctor_list, null);
+                        @SuppressLint("InflateParams") View mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_doctor_list, null);
                         return new DoctorListViewHolder(mView);
                     }
 
@@ -223,9 +220,18 @@ public class SpecializationFragment extends Fragment {
         alertRecyclerView.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
 
-        AlertDialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.show();
+        mDialog = builder.create();
+        mDialog.setCanceledOnTouchOutside(true);
+        mDialog.show();
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
     }
 
     public static class DoctorListViewHolder extends RecyclerView.ViewHolder {

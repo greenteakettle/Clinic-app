@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+
+import com.example.clinic.feedback.FeedbackActivity;
+import com.example.clinic.model.DoctorList;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -35,6 +38,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar mToolbar;
@@ -65,7 +70,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         //Toolbar
-        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        mToolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Clinic");
 
@@ -116,17 +121,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         final MenuItem nav_profile = menuNav.findItem(R.id.nav_profile);
         final MenuItem nav_ShowAppointment = menuNav.findItem(R.id.nav_showAppointment);
         final MenuItem nav_BookedAppointment = menuNav.findItem(R.id.nav_bookedAppointment);
+        final MenuItem nav_feedback = menuNav.findItem(R.id.nav_feedback);
+        final MenuItem navEditUserInfo = menuNav.findItem(R.id.nav_edit_user_info);
         MenuItem nav_logOut = menuNav.findItem(R.id.nav_logout);
         MenuItem nav_logIn = menuNav.findItem(R.id.nav_login);
-        MenuItem navEditUserInfo = menuNav.findItem(R.id.nav_edit_user_info);
-
-        navEditUserInfo.setVisible(currentUser != null);
 
         nav_profile.setVisible(false);
         nav_ShowAppointment.setVisible(false);
         nav_BookedAppointment.setVisible(false);
         nav_logIn.setVisible(false);
         nav_logOut.setVisible(false);
+        nav_feedback.setVisible(false);
+        navEditUserInfo.setVisible(false);
 
 
         // Check if user is signed in  or not
@@ -153,11 +159,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         final MenuItem nav_profile = menuNav.findItem(R.id.nav_profile);
         final MenuItem nav_ShowAppointment = menuNav.findItem(R.id.nav_showAppointment);
         final MenuItem nav_BookedAppointment = menuNav.findItem(R.id.nav_bookedAppointment);
+        final MenuItem nav_feedback = menuNav.findItem(R.id.nav_feedback);
+        final MenuItem navEditUserInfo = menuNav.findItem(R.id.nav_edit_user_info);
 
         nav_profile.setVisible(false);
         nav_ShowAppointment.setVisible(false);
         nav_BookedAppointment.setVisible(false);
-
+        nav_feedback.setVisible(false);
+        navEditUserInfo.setVisible(false);
 
         final String uid = mAuth.getUid().toString();
         mUserDatabase.child("User_Type").child(uid).addValueEventListener(new ValueEventListener() {
@@ -168,13 +177,23 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 if ("Patient".equals(Type)) {
                     nav_BookedAppointment.setVisible(true);
-
+                    nav_feedback.setVisible(true);
+                    navEditUserInfo.setVisible(true);
 
                     mUserDatabase.child("Patient_Details").child(uid).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             String name = dataSnapshot.child("Name").getValue(String.class);
                             String email = dataSnapshot.child("Email").getValue(String.class);
+                            String gender = dataSnapshot.child("Gender").getValue(String.class);
+
+                            CircleImageView circleImageView = findViewById(R.id.header_userPic);
+
+                            if ("Мужской".equals(gender)) {
+                                circleImageView.setImageResource(R.mipmap.man);
+                            } else if ("Женский".equals(gender)) {
+                                circleImageView.setImageResource(R.mipmap.woman);
+                            }
 
                             View mView = mNavigationView.getHeaderView(0);
                             TextView userName = mView.findViewById(R.id.header_userName);
@@ -184,56 +203,65 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             userEmail.setText(email);
 
                             Toast.makeText(HomeActivity.this, "Вы вошли в аккаунт", Toast.LENGTH_SHORT).show();
-
                         }
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
                         }
                     });
-                } else if ("Doctor".equals(Type) && "Approved".equals(status)) {
-                    nav_profile.setVisible(true);
-                    nav_ShowAppointment.setVisible(true);
-                    nav_BookedAppointment.setVisible(true);
-
-                    mUserDatabase.child("Doctor_Details").child(uid).addValueEventListener(new ValueEventListener() {
+                } else if ("Doctor".equals(Type)) {
+                    mUserDatabase.child("Doctor_Details").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists() && "1".equals(dataSnapshot.child("Status").getValue(String.class))) {
+                                nav_profile.setVisible(true);
+                                nav_ShowAppointment.setVisible(true);
 
-                            String name = dataSnapshot.child("Name").getValue(String.class);
-                            String email = dataSnapshot.child("Email").getValue(String.class);
+                                String name = dataSnapshot.child("Name").getValue(String.class);
+                                String email = dataSnapshot.child("Email").getValue(String.class);
+                                String gender = dataSnapshot.child("Gender").getValue(String.class);
 
-                            View mView = mNavigationView.getHeaderView(0);
-                            TextView userName = mView.findViewById(R.id.header_userName);
-                            TextView userEmail = mView.findViewById(R.id.header_userEmail);
+                                CircleImageView circleImageView = findViewById(R.id.header_userPic);
 
-                            userName.setText(name);
-                            userEmail.setText(email);
+                                if ("Мужской".equals(gender)) {
+                                    circleImageView.setImageResource(R.mipmap.man);
+                                } else if ("Женский".equals(gender)) {
+                                    circleImageView.setImageResource(R.mipmap.woman);
+                                }
 
-                            Toast.makeText(HomeActivity.this, "Вы вошли в аккаунт", Toast.LENGTH_SHORT).show();
+                                View mView = mNavigationView.getHeaderView(0);
+                                TextView userName = mView.findViewById(R.id.header_userName);
+                                TextView userEmail = mView.findViewById(R.id.header_userEmail);
 
+                                userName.setText(name);
+                                userEmail.setText(email);
+
+                                Toast.makeText(HomeActivity.this, "Вы вошли в аккаунт", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(HomeActivity.this, "Ваш аккаунт ожидает подтверждения", Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
+                            Toast.makeText(HomeActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
-                } else {
-                    Toast.makeText(HomeActivity.this, "Вы не авторизованы или учетная запись ожидает подтверждения.", Toast.LENGTH_SHORT).show();
+
+            } else {
+                    Toast.makeText(HomeActivity.this, "Ваш аккаунт ожидает подтверждения", Toast.LENGTH_SHORT).show();
                     FirebaseAuth.getInstance().signOut();
                     onStart();
                 }
-            }
+                }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(HomeActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -259,12 +287,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             onStart();
         } else if (itemId == R.id.nav_edit_user_info) {
             startActivity(new Intent(HomeActivity.this, EditUserProfileActivity.class));
+        } else if (itemId == R.id.nav_feedback) {
+            startActivity(new Intent(HomeActivity.this, FeedbackActivity.class));
         }
-
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     private void launchScreen(Class<?> activity) {
         hideKeyboard();

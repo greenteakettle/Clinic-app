@@ -52,7 +52,7 @@ public class ShowDoctorAppointmentActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.doctor_appointment_layout);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("My Appointment");
+        getSupportActionBar().setTitle("Мое расписание");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         userID = mAuth.getCurrentUser().getUid().toString();

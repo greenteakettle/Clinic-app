@@ -52,7 +52,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity {
         education = getIntent().getStringExtra("Education").toString();
         email = getIntent().getStringExtra("Email").toString();
         age = getIntent().getStringExtra("Age").toString();
-        contact = getIntent().getStringExtra("Contact").toString();
+        contact = getIntent().getStringExtra("Contact_N0").toString();
         address = getIntent().getStringExtra("Address").toString();
 
         mName.setText(name);
@@ -90,7 +90,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity {
                 break;
 
             case R.id.edit_contact:
-                alertDialog(contact,"Contact");
+                alertDialog(contact,"Contact_N0");
                 break;
 
             case R.id.final_update:
@@ -112,7 +112,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity {
        mDatabase.child(currentUser).child("Experience").setValue(experience);
        mDatabase.child(currentUser).child("Education").setValue(education);
        mDatabase.child(currentUser).child("Address").setValue(address);
-       mDatabase.child(currentUser).child("Contact").setValue(contact);
+       mDatabase.child(currentUser).child("Contact_N0").setValue(contact);
        mDatabase.child(currentUser).child("Age").setValue(age);
 
        startActivity(new Intent(EditDoctorProfileActivity.this, DoctorProfileActivity.class));
@@ -167,7 +167,7 @@ public class EditDoctorProfileActivity extends AppCompatActivity {
                     mAge.setText(update);
                     age = mAge.getText().toString();
                 }
-                else if(detail.equals("Contact")){
+                else if(detail.equals("Contact_N0")){
                     mContact.setText(update);
                     contact = mContact.getText().toString();
                 }

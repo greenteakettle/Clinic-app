@@ -157,6 +157,7 @@ public class RegisterDoctorActivity extends AppCompatActivity {
                             userDetails.put("Address", address);
                             userDetails.put("Email", email);
                             userDetails.put("Status", "0");
+                            userDetails.put("Shift", "");
 
                             mUserDetails.child("Doctor_Details").child(uid).setValue(userDetails).addOnCompleteListener(task1 -> {
                                 mRegProgress.dismiss();
@@ -164,6 +165,20 @@ public class RegisterDoctorActivity extends AppCompatActivity {
                                 verifyEmail(email);
 
                                 saveSpecialization(specialization, doctorId);
+
+                                // Вход в аккаунт после успешной регистрации
+                                mAuth.signInWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener(RegisterDoctorActivity.this, signInTask -> {
+                                            if (signInTask.isSuccessful()) {
+                                                // Вход успешен
+                                                Intent intent = new Intent(RegisterDoctorActivity.this, HomeActivity.class);
+                                                startActivity(intent);
+                                                finish(); // Закрываем текущую активность
+                                            } else {
+                                                // Вход не удался
+                                                Toast.makeText(RegisterDoctorActivity.this, "Ошибка входа", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                             });
                         } else {
                             mRegProgress.hide();
@@ -175,6 +190,7 @@ public class RegisterDoctorActivity extends AppCompatActivity {
                     }
                 });
     }
+
 
     private void verifyEmail(final String email) {
 

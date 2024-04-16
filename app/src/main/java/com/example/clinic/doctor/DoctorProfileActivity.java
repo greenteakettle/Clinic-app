@@ -18,6 +18,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 public class DoctorProfileActivity extends AppCompatActivity {
 
     private TextView mName, mEmail, mSpecialization, mExperience, mAge, mContact, mAddress, mEducation;
@@ -70,7 +72,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
                 intent.putExtra("Education", education);
                 intent.putExtra("Email", email);
                 intent.putExtra("Age", age);
-                intent.putExtra("Contact", contact);
+                intent.putExtra("Contact_N0", contact);
                 intent.putExtra("Address", address);
                 startActivity(intent);
             }
@@ -90,7 +92,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
         TextView rosterLunchMorning = (TextView) view.findViewById(R.id.roster_break_morning);
         TextView rosterLunchEvening = (TextView) view.findViewById(R.id.roster_break_evening);
 
-        if (shift == "Morning") {
+        if (Objects.equals(shift, "Утро")) {
 
             rosterShift.setText(shift);
 
@@ -113,7 +115,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
         }
 
         builder.setView(view);
-        builder.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Назад", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -135,7 +137,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
                 name = getDataSnapshot("Name", dataSnapshot);
                 email = getDataSnapshot("Email", dataSnapshot);
-                contact = getDataSnapshot("Contact", dataSnapshot);
+                contact = getDataSnapshot("Contact_N0", dataSnapshot);
                 education = getDataSnapshot("Education", dataSnapshot);
                 specialization = getDataSnapshot("Specialization", dataSnapshot);
                 experience = getDataSnapshot("Experience", dataSnapshot);

@@ -161,7 +161,7 @@ public class DateFragment extends Fragment {
 
                                 String name = model.getName();
                                 String specialization = model.getSpecialization();
-                                String contact = model.getContact();
+                                String contact = model.getContact_N0();
                                 String experience = model.getExperience();
                                 String education = model.getEducation();
                                 String shift = model.getShift();
@@ -169,7 +169,7 @@ public class DateFragment extends Fragment {
                                 Intent intent = new Intent(getContext(), PatientViewDoctorProfileActivity.class);
                                 intent.putExtra("Name", name);
                                 intent.putExtra("Specialization", specialization);
-                                intent.putExtra("Contact_NO", contact);
+                                intent.putExtra("Contact_N0", contact);
                                 intent.putExtra("Experience", experience);
                                 intent.putExtra("Education", education);
                                 intent.putExtra("Shift", shift);

@@ -1,6 +1,6 @@
 package com.example.clinic.model;
 
-public class DoctorList{
+public class DoctorList {
 
     private String Doctor_ID;
     private String Name;
@@ -13,7 +13,7 @@ public class DoctorList{
     private String Shift;
     private String Age;
     private String Gender;
-    private String Status;
+    private static String Status;
 
     public DoctorList() {
     }
@@ -89,11 +89,11 @@ public class DoctorList{
         this.Experience = experience;
     }
 
-    public String getContact() {
+    public String getContact_N0() {
         return Contact_N0;
     }
 
-    public void setContact(String contact_N0) {
+    public void setContact_N0(String contact_N0) {
         this.Contact_N0 = contact_N0;
     }
 
@@ -121,7 +121,7 @@ public class DoctorList{
         this.Gender = gender;
     }
 
-    public String getStatus() {
+    public static String getStatus() {
         return Status;
     }
 

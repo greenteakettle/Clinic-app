@@ -2,8 +2,8 @@ package com.example.clinic.patient;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +14,8 @@ import com.example.clinic.R;
 
 import java.util.Calendar;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class PatientViewDoctorProfileActivity extends AppCompatActivity {
 
     private TextView mName, mEducation, mSpecialization, mExperience, mContactNo, mShift;
@@ -21,6 +23,9 @@ public class PatientViewDoctorProfileActivity extends AppCompatActivity {
 
     private Calendar calendar;
     private DatePickerDialog datePickerDialog;
+
+    private CircleImageView mProfileImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,36 +44,34 @@ public class PatientViewDoctorProfileActivity extends AppCompatActivity {
         mExperience = (TextView) findViewById(R.id.patient_doctorProfile_experience);
         mContactNo = (TextView) findViewById(R.id.patient_doctorProfile_contact);
         mShift = (TextView) findViewById(R.id.patient_doctorProfile_shift);
+        mProfileImage = findViewById(R.id.patient_doctorProfile_pic);
 
         Button mBookAppointmentBtn = (Button) findViewById(R.id.book_appointment_button);
-        mBookAppointmentBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mBookAppointmentBtn.setOnClickListener(v -> {
 
-                calendar = Calendar.getInstance();
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                int month = calendar.get(Calendar.MONTH);
-                int year = calendar.get(Calendar.YEAR);
+            calendar = Calendar.getInstance();
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int month = calendar.get(Calendar.MONTH);
+            int year = calendar.get(Calendar.YEAR);
 
-                datePickerDialog = new DatePickerDialog(PatientViewDoctorProfileActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            datePickerDialog = new DatePickerDialog(PatientViewDoctorProfileActivity.this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                        String userId = getIntent().getStringExtra("UserId");
-                        String date = dayOfMonth + "-" + (month + 1) + "-" + year;
+                    String userId = getIntent().getStringExtra("UserId");
+                    String date = dayOfMonth + "-" + (month + 1) + "-" + year;
 
-                        Intent intent = new Intent(PatientViewDoctorProfileActivity.this, BookAppointmentActivity.class);
-                        intent.putExtra("Date", date);
-                        intent.putExtra("DoctorUserId", userId);
-                        intent.putExtra("Shift", shift);
-                        startActivity(intent);
-                    }
-                }, day, month, year);
-                datePickerDialog.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() + (3 * 60 * 60 * 1000));
-                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() + (15 * 24 * 60 * 60 * 1000));
-                datePickerDialog.show();
-            }
+                    Intent intent = new Intent(PatientViewDoctorProfileActivity.this, BookAppointmentActivity.class);
+                    intent.putExtra("Date", date);
+                    intent.putExtra("DoctorUserId", userId);
+                    intent.putExtra("Shift", shift);
+                    startActivity(intent);
+                }
+            }, day, month, year);
+            datePickerDialog.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() + (3 * 60 * 60 * 1000));
+            datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() + (15 * 24 * 60 * 60 * 1000));
+            datePickerDialog.show();
         });
     }
 
@@ -80,8 +83,9 @@ public class PatientViewDoctorProfileActivity extends AppCompatActivity {
         String education = getIntent().getStringExtra("Education");
         String specialization = getIntent().getStringExtra("Specialization");
         String experience = getIntent().getStringExtra("Experience");
-        String contact = getIntent().getStringExtra("Contact");
-        shift = getIntent().getStringExtra("Shift");
+        String contact = getIntent().getStringExtra("Contact_N0");
+        String shift = getIntent().getStringExtra("Shift");
+        String gender = getIntent().getStringExtra("Gender");
 
         mName.setText(name);
         mEducation.setText(education);
@@ -89,5 +93,11 @@ public class PatientViewDoctorProfileActivity extends AppCompatActivity {
         mExperience.setText(experience);
         mContactNo.setText(contact);
         mShift.setText(shift);
+
+        if ("Мужской".equals(gender)) {
+            mProfileImage.setImageResource(R.mipmap.male_doctor);
+        } else if ("Женский".equals(gender)) {
+            mProfileImage.setImageResource(R.mipmap.female_doctor);
+        }
     }
 }

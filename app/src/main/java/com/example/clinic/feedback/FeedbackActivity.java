@@ -23,7 +23,7 @@ public class FeedbackActivity extends AppCompatActivity {
     private EditText mFeedbackText;
     private Button mSubmitFeedback;
 
-    private String currnetUID;
+    private String currentUID;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -33,7 +33,7 @@ public class FeedbackActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
 
-        currnetUID = mAuth.getCurrentUser().getUid().toString();
+        currentUID = mAuth.getCurrentUser().getUid().toString();
 
         mName = (TextView) findViewById(R.id.feedback_name);
         mEmail = (TextView) findViewById(R.id.feedback_email);
@@ -56,7 +56,7 @@ public class FeedbackActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        mDatabase.child("User_Type").child(currnetUID).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("User_Type").child(currentUID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -66,7 +66,7 @@ public class FeedbackActivity extends AppCompatActivity {
 
                 if(type.equals("Patient")){
 
-                    mDatabase.child("Patient_Details").child(currnetUID).addValueEventListener(new ValueEventListener() {
+                    mDatabase.child("Patient_Details").child(currentUID).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             name[0] = dataSnapshot.child("Name").getValue().toString();
@@ -84,7 +84,7 @@ public class FeedbackActivity extends AppCompatActivity {
 
                 }else if(type.equals("Doctor")){
 
-                    mDatabase.child("Doctor_Details").child(currnetUID).addValueEventListener(new ValueEventListener() {
+                    mDatabase.child("Doctor_Details").child(currentUID).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             name[0] = dataSnapshot.child("Name").getValue().toString();

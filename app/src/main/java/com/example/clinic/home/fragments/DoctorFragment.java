@@ -111,7 +111,7 @@ public class DoctorFragment extends Fragment {
                             public void onClick(View view) {
                                 String name = model.getName();
                                 String specialization = model.getSpecialization();
-                                String contact = model.getContact();
+                                String contact = model.getContact_N0();
                                 String experience = model.getExperience();
                                 String education = model.getEducation();
                                 String shift = model.getShift();
@@ -120,16 +120,18 @@ public class DoctorFragment extends Fragment {
                                 Intent intent = new Intent(getContext(), PatientViewDoctorProfileActivity.class);
                                 intent.putExtra("Name", name);
                                 intent.putExtra("Specialization", specialization);
-                                intent.putExtra("Contact", contact);
-                                intent.putExtra("Experience", experience);
                                 intent.putExtra("Education", education);
+                                intent.putExtra("Experience", experience);
+                                intent.putExtra("Contact_N0", contact);
                                 intent.putExtra("Shift", shift);
                                 intent.putExtra("UserId", uid);
                                 startActivity(intent);
+
                             }
                         });
                     }
 
+                    @NonNull
                     @Override
                     public DoctorListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_doctor_list, parent, false);
