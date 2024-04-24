@@ -13,7 +13,7 @@ public class DoctorList {
     private String Shift;
     private String Age;
     private String Gender;
-    private static String Status;
+    private String Status;
 
     public DoctorList() {
     }
@@ -121,7 +121,7 @@ public class DoctorList {
         this.Gender = gender;
     }
 
-    public static String getStatus() {
+    public String getStatus() {
         return Status;
     }
 

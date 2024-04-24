@@ -3,11 +3,14 @@ package com.example.clinic.doctor;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.clinic.R;
@@ -25,8 +28,9 @@ public class DoctorProfileActivity extends AppCompatActivity {
     private TextView mName, mEmail, mSpecialization, mExperience, mAge, mContact, mAddress, mEducation;
     private Button mShowRosterPlanButton, mEditProfileButton;
     private Toolbar mToolbar;
+    private ImageView mImageView;
 
-    private String name, specialization, experience, education, email, age, contact, address, shift;
+    private String name, specialization, experience, education, email, age, contact, address, shift, gender;
 
     private DatabaseReference mDoctorDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -44,7 +48,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
         mAge = (TextView) findViewById(R.id.doctor_age);
         mContact = (TextView) findViewById(R.id.doctor_contact);
         mAddress = (TextView) findViewById(R.id.doctor_address);
-
+        mImageView = (ImageView) findViewById(R.id.doctor_pic);
         //Toolbar
         mToolbar = (Toolbar) findViewById(R.id.doctor_profile_toolbar);
         setSupportActionBar(mToolbar);
@@ -143,6 +147,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
                 experience = getDataSnapshot("Experience", dataSnapshot);
                 age = getDataSnapshot("Age", dataSnapshot);
                 address = getDataSnapshot("Address", dataSnapshot);
+                gender = getDataSnapshot("Gender", dataSnapshot);
                 shift = getDataSnapshot("Shift", dataSnapshot);
 
                 mName.setText(name);
@@ -153,6 +158,13 @@ public class DoctorProfileActivity extends AppCompatActivity {
                 mAge.setText(age);
                 mContact.setText(contact);
                 mAddress.setText(address);
+
+                if (gender.equalsIgnoreCase("Мужской")) {
+                    mImageView.setImageResource(R.mipmap.male_doctor);
+                } else if (gender.equalsIgnoreCase("Женский")) {
+                    mImageView.setImageResource(R.mipmap.female_doctor);
+                }
+
 
             }
 

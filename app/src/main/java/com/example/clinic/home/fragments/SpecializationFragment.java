@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.fragment.app.Fragment;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.clinic.R;
@@ -163,32 +166,52 @@ public class SpecializationFragment extends Fragment {
 
                         final String doctorID = model.getDoctor_ID();
 
-                        mDatabase.child("Doctor_Details").child(doctorID).addValueEventListener(new ValueEventListener() {
+                        mDatabase.child("Doctor_Details").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                final String doctorName = getDataSnapshot("Name", dataSnapshot);
-                                final String specialization = special; // Get specialization from method parameter
-                                final String contact = getDataSnapshot("Contact_N0", dataSnapshot);
-                                final String experience = getDataSnapshot("Experience", dataSnapshot);
-                                final String education = getDataSnapshot("Education", dataSnapshot);
-                                final String shift = getDataSnapshot("Shift", dataSnapshot);
 
-                                holder.setDoctorName(doctorName);
-                                holder.setSpecialization(specialization);
-                                holder.mView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(getContext(), PatientViewDoctorProfileActivity.class);
-                                        intent.putExtra("Name", doctorName);
-                                        intent.putExtra("Specialization", specialization);
-                                        intent.putExtra("Contact_N0", contact);
-                                        intent.putExtra("Experience", experience);
-                                        intent.putExtra("Education", education);
-                                        intent.putExtra("Shift", shift);
-                                        intent.putExtra("UserId", doctorID);
-                                        startActivity(intent);
+                                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                                    String id = childSnapshot.child("Doctor_ID").getValue(String.class);
+                                    if (Objects.equals(id, doctorID)) {
+                                        final String doctorName = getDataSnapshot("Name", childSnapshot);
+                                        final String specialization = special; // Get specialization from method parameter
+                                        final String contact = getDataSnapshot("Contact_N0", childSnapshot);
+                                        final String experience = getDataSnapshot("Experience", childSnapshot);
+                                        final String education = getDataSnapshot("Education", childSnapshot);
+                                        final String shift = getDataSnapshot("Shift", childSnapshot);
+                                        final String status = getDataSnapshot("Status", childSnapshot);
+                                        final String gender = getDataSnapshot("Gender", childSnapshot);
+                                        if (status.equals("1")) {
+                                            holder.mView.setVisibility(View.VISIBLE);
+                                        } else {
+                                            holder.mView.setVisibility(View.GONE);
+                                        }
+
+                                        if (model.getGender().equalsIgnoreCase("Мужской")) {
+                                            holder.setImage(R.mipmap.male_doctor);
+                                        } else if (model.getGender().equalsIgnoreCase("Женский")) {
+                                            holder.setImage(R.mipmap.female_doctor);
+                                        }
+
+                                        holder.setDoctorName(doctorName);
+                                        holder.setSpecialization(specialization);
+                                        holder.mView.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent intent = new Intent(getContext(), PatientViewDoctorProfileActivity.class);
+                                                intent.putExtra("Name", doctorName);
+                                                intent.putExtra("Specialization", specialization);
+                                                intent.putExtra("Contact_N0", contact);
+                                                intent.putExtra("Experience", experience);
+                                                intent.putExtra("Education", education);
+                                                intent.putExtra("Shift", shift);
+                                                intent.putExtra("UserId", doctorID);
+                                                intent.putExtra("Gender", gender);
+                                                startActivity(intent);
+                                            }
+                                        });
                                     }
-                                });
+                                }
                             }
 
                             @Override
@@ -250,6 +273,11 @@ public class SpecializationFragment extends Fragment {
         public void setSpecialization(String specialization) {
             TextView userName = mView.findViewById(R.id.special_id_single_user);
             userName.setText(specialization);
+        }
+
+        public void setImage(int resource) {
+            ImageView mImageView = (ImageView) mView.findViewById(R.id.profile_id_single_user);
+            mImageView.setImageResource(resource);
         }
     }
 

@@ -1,8 +1,12 @@
 package com.example.clinic.feedback;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,9 +29,12 @@ public class FeedbackActivity extends AppCompatActivity {
 
     private String currentUID;
 
+    private Toolbar mToolbar;
+
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +46,12 @@ public class FeedbackActivity extends AppCompatActivity {
         mEmail = (TextView) findViewById(R.id.feedback_email);
         mFeedbackText = (EditText) findViewById(R.id.feedback_text);
         mSubmitFeedback = (Button) findViewById(R.id.feedback_submit_button);
+
+        // Toolbar
+        mToolbar = findViewById(R.id.feedback_toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("Оставить отзыв");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mSubmitFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,5 +122,15 @@ public class FeedbackActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

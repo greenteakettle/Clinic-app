@@ -115,7 +115,7 @@ public class DoctorFragment extends Fragment {
                                 String experience = model.getExperience();
                                 String education = model.getEducation();
                                 String shift = model.getShift();
-
+                                String gender = model.getGender();
 
                                 Intent intent = new Intent(getContext(), PatientViewDoctorProfileActivity.class);
                                 intent.putExtra("Name", name);
@@ -125,6 +125,7 @@ public class DoctorFragment extends Fragment {
                                 intent.putExtra("Contact_N0", contact);
                                 intent.putExtra("Shift", shift);
                                 intent.putExtra("UserId", uid);
+                                intent.putExtra("Gender", gender);
                                 startActivity(intent);
 
                             }

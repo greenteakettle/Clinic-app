@@ -21,6 +21,11 @@
             android:id="@+id/nav_edit_user_info"
             android:icon="@mipmap/edit_text"
             android:title="Редактировать профиль"/>
+
+        <item
+            android:id="@+id/nav_medcard"
+            android:icon="@mipmap/medcard"
+            android:title="Моя медкарта"/>
         <item
             android:id="@+id/nav_login"
             android:icon="@mipmap/login"

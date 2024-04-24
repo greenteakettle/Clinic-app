@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.example.clinic.feedback.FeedbackActivity;
 import com.example.clinic.model.DoctorList;
+import com.example.clinic.patient.PatientViewMedcardActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -122,7 +123,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         final MenuItem nav_ShowAppointment = menuNav.findItem(R.id.nav_showAppointment);
         final MenuItem nav_BookedAppointment = menuNav.findItem(R.id.nav_bookedAppointment);
         final MenuItem nav_feedback = menuNav.findItem(R.id.nav_feedback);
-        final MenuItem navEditUserInfo = menuNav.findItem(R.id.nav_edit_user_info);
+        final MenuItem nav_EditUserInfo = menuNav.findItem(R.id.nav_edit_user_info);
+        final MenuItem nav_Medcard = menuNav.findItem(R.id.nav_medcard);
         MenuItem nav_logOut = menuNav.findItem(R.id.nav_logout);
         MenuItem nav_logIn = menuNav.findItem(R.id.nav_login);
 
@@ -132,7 +134,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         nav_logIn.setVisible(false);
         nav_logOut.setVisible(false);
         nav_feedback.setVisible(false);
-        navEditUserInfo.setVisible(false);
+        nav_EditUserInfo.setVisible(false);
+        nav_Medcard.setVisible(false);
 
 
         // Check if user is signed in  or not
@@ -160,13 +163,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         final MenuItem nav_ShowAppointment = menuNav.findItem(R.id.nav_showAppointment);
         final MenuItem nav_BookedAppointment = menuNav.findItem(R.id.nav_bookedAppointment);
         final MenuItem nav_feedback = menuNav.findItem(R.id.nav_feedback);
-        final MenuItem navEditUserInfo = menuNav.findItem(R.id.nav_edit_user_info);
+        final MenuItem nav_EditUserInfo = menuNav.findItem(R.id.nav_edit_user_info);
+        final MenuItem nav_Medcard = menuNav.findItem(R.id.nav_medcard);
 
         nav_profile.setVisible(false);
         nav_ShowAppointment.setVisible(false);
         nav_BookedAppointment.setVisible(false);
         nav_feedback.setVisible(false);
-        navEditUserInfo.setVisible(false);
+        nav_EditUserInfo.setVisible(false);
+        nav_Medcard.setVisible(false);
 
         final String uid = mAuth.getUid().toString();
         mUserDatabase.child("User_Type").child(uid).addValueEventListener(new ValueEventListener() {
@@ -178,7 +183,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 if ("Patient".equals(Type)) {
                     nav_BookedAppointment.setVisible(true);
                     nav_feedback.setVisible(true);
-                    navEditUserInfo.setVisible(true);
+                    nav_EditUserInfo.setVisible(true);
+                    nav_Medcard.setVisible(true);
 
                     mUserDatabase.child("Patient_Details").child(uid).addValueEventListener(new ValueEventListener() {
                         @Override
@@ -289,6 +295,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(HomeActivity.this, EditUserProfileActivity.class));
         } else if (itemId == R.id.nav_feedback) {
             startActivity(new Intent(HomeActivity.this, FeedbackActivity.class));
+        } else if (itemId == R.id.nav_medcard) {
+        startActivity(new Intent(HomeActivity.this, PatientViewMedcardActivity.class));
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;

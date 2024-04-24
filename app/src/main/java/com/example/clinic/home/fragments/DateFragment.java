@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -155,6 +156,16 @@ public class DateFragment extends Fragment {
 
                         holder.setDoctorName(model.getName());
                         holder.setSpecialization(model.getSpecialization());
+                        if(model.getStatus().equals("1")) {
+                            holder.mView.setVisibility(View.VISIBLE);
+                        } else {
+                            holder.mView.setVisibility(View.GONE);
+                        }
+                        if (model.getGender().equalsIgnoreCase("Мужской")) {
+                            holder.setImage(R.mipmap.male_doctor);
+                        } else if (model.getGender().equalsIgnoreCase("Женский")) {
+                            holder.setImage(R.mipmap.female_doctor);
+                        }
                         holder.mView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -165,6 +176,7 @@ public class DateFragment extends Fragment {
                                 String experience = model.getExperience();
                                 String education = model.getEducation();
                                 String shift = model.getShift();
+                                String gender = model.getGender();
 
                                 Intent intent = new Intent(getContext(), PatientViewDoctorProfileActivity.class);
                                 intent.putExtra("Name", name);
@@ -174,6 +186,7 @@ public class DateFragment extends Fragment {
                                 intent.putExtra("Education", education);
                                 intent.putExtra("Shift", shift);
                                 intent.putExtra("UserId", doctorID);
+                                intent.putExtra("Gender", gender);
                                 startActivity(intent);
                             }
                         });
@@ -209,6 +222,10 @@ public class DateFragment extends Fragment {
         public void setSpecialization(String specialization) {
             TextView userName = (TextView) mView.findViewById(R.id.special_id_single_user);
             userName.setText(specialization);
+        }
+        public void setImage(int resource) {
+            ImageView mImageView = (ImageView) mView.findViewById(R.id.profile_id_single_user);
+            mImageView.setImageResource(resource);
         }
     }
 

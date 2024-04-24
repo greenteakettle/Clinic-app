@@ -84,7 +84,8 @@ public class PatientViewDoctorProfileActivity extends AppCompatActivity {
         String specialization = getIntent().getStringExtra("Specialization");
         String experience = getIntent().getStringExtra("Experience");
         String contact = getIntent().getStringExtra("Contact_N0");
-        String shift = getIntent().getStringExtra("Shift");
+        shift = getIntent().getStringExtra("Shift");
+
         String gender = getIntent().getStringExtra("Gender");
 
         mName.setText(name);
@@ -100,4 +101,5 @@ public class PatientViewDoctorProfileActivity extends AppCompatActivity {
             mProfileImage.setImageResource(R.mipmap.female_doctor);
         }
     }
+
 }
