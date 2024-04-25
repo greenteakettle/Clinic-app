@@ -2,6 +2,7 @@ package com.example.clinic.doctor;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
@@ -91,6 +93,13 @@ public class ShowDoctorAppointmentActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    // Метод для открытия активити DoctorViewMedcardActivity
+    public void openMedcardActivity(String patientID) {
+        Intent intent = new Intent(this, DoctorViewMedcardActivity.class);
+        intent.putExtra("patientID", patientID);
+        startActivity(intent);
+    }
+
     private void showAppointment() {
         Query query = mDatabase.child("Appointment").child(userID).child(date);
 
@@ -107,11 +116,22 @@ public class ShowDoctorAppointmentActivity extends AppCompatActivity {
                         final String slot = getRef(position).getKey().toString();
                         final String[] name = new String[1];
 
+                        // Находим кнопку в макете для каждого элемента списка
+                        Button openMedcardButton = holder.mView.findViewById(R.id.open_medcard_button);
+
+                        // Устанавливаем обработчик нажатия на кнопку
+                        openMedcardButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // Вызываем метод для открытия активити с медкартой
+                                openMedcardActivity(patientID);
+                            }
+                        });
+
                         holder.mView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-//                                Toast.makeText(Doctor_ShowAppointmentActivity.this, slot, Toast.LENGTH_SHORT).show();
-                                alertDialog(patientID, slot);
+                                openMedcardActivity(patientID);
                             }
                         });
 
@@ -185,9 +205,6 @@ public class ShowDoctorAppointmentActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
 
-//                    Toast.makeText(Doctor_ShowAppointmentActivity.this, userID+" = UserID "+date+" = Date "+slot+" = Slot", Toast.LENGTH_SHORT).show();
-
-
                 Query query = mDatabase.child("Booked_Appointments").child(patientID).orderByChild("Date");
                 query.addChildEventListener(new ChildEventListener() {
                     @Override
@@ -201,18 +218,13 @@ public class ShowDoctorAppointmentActivity extends AppCompatActivity {
                             String value = child.getValue().toString();
 
                             if(value.equals(userID)){
-//                                    Toast.makeText(Doctor_ShowAppointmentActivity.this, key+" - "+value, Toast.LENGTH_SHORT).show();
                                 count = count + 1;
-
                             }
                             if(value.equals(date)){
-//                                    Toast.makeText(Doctor_ShowAppointmentActivity.this, key+" - "+value, Toast.LENGTH_SHORT).show();
                                 count = count + 1;
-
                             }
                         }
                         if(count == 2){
-//                                Toast.makeText(Doctor_ShowAppointmentActivity.this, Integer.toString(count), Toast.LENGTH_SHORT).show();
                             mDatabase.child("Appointment").child(userID).child(date).child(slot).removeValue();
                             mDatabase.child("Booked_Appointments").child(patientID).child(myParentNode).removeValue();
 
@@ -240,8 +252,6 @@ public class ShowDoctorAppointmentActivity extends AppCompatActivity {
 
                     }
                 });
-
-
             }
         });
 
@@ -300,55 +310,55 @@ public class ShowDoctorAppointmentActivity extends AppCompatActivity {
                 time = "14:00";
                 break;
             case "14":
-                time = "14:20 PM";
+                time = "14:20";
                 break;
             case "15":
-                time = "14:40 PM";
+                time = "14:40";
                 break;
             case "16":
-                time = "15:00 PM";
+                time = "15:00";
                 break;
             case "17":
-                time = "15:20 PM";
+                time = "15:20";
                 break;
             case "18":
-                time = "15:40 PM";
+                time = "15:40";
                 break;
             case "19":
-                time = "16:00 PM";
+                time = "16:00";
                 break;
             case "20":
-                time = "16:20 PM";
+                time = "16:20";
                 break;
             case "21":
-                time = "16:40 PM";
+                time = "16:40";
                 break;
             case "22":
-                time = "17:00 PM";
+                time = "17:00";
                 break;
             case "23":
-                time = "17:20 PM";
+                time = "17:20";
                 break;
             case "24":
-                time = "17:40 PM";
+                time = "17:40";
                 break;
             case "25":
-                time = "18:00 PM";
+                time = "18:00";
                 break;
             case "26":
-                time = "18:20 PM";
+                time = "18:20";
                 break;
             case "27":
-                time = "18:40 PM";
+                time = "18:40";
                 break;
             case "28":
-                time = "21:00 PM";
+                time = "21:00";
                 break;
             case "29":
-                time = "21:20 PM";
+                time = "21:20";
                 break;
             case "30":
-                time = "21:40 PM";
+                time = "21:40";
                 break;
             default:
                 break;
@@ -361,8 +371,7 @@ public class ShowDoctorAppointmentActivity extends AppCompatActivity {
 
         public DoctorShowAppointmentVH(View itemView) {
             super(itemView);
-
-            mView =itemView;
+            mView = itemView;
         }
 
         public void setTime(String time) {
@@ -375,5 +384,4 @@ public class ShowDoctorAppointmentActivity extends AppCompatActivity {
             mName.setText(name);
         }
     }
-
 }

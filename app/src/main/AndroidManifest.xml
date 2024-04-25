@@ -107,6 +107,13 @@ package="com.example.clinic">
         android:exported="true"/>
 
     <activity
+        android:name=".doctor.DoctorViewMedcardActivity"
+        android:parentActivityName=".home.HomeActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity"
+        android:exported="true"/>
+
+    <activity
         android:name=".auth.ForgotPasswordActivity"
         android:parentActivityName=".auth.LoginActivity"
         android:screenOrientation="portrait"

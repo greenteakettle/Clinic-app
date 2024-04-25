@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class PatientViewMedcardActivity extends AppCompatActivity {
 
+
     private DatabaseReference medcardRef;
 
     private Toolbar mToolbar;
